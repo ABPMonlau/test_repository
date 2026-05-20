@@ -1,0 +1,37 @@
+# --- Herramientas de desarrollo e IDEs ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log
+.gemini/
+.agents/
+
+# --- API (Python - api-vinos) ---
+api-vinos/venv/
+api-vinos/__pycache__/
+api-vinos/*.pyc
+api-vinos/.env
+
+# --- Frontend (Node/JS - front-end-vinos) ---
+front-end-vinos/node_modules/
+front-end-vinos/dist/
+front-end-vinos/dist-ssr/
+front-end-vinos/*.local
+front-end-vinos/.vite/
+front-end-vinos/.env
+front-end-vinos/.env.local
+front-end-vinos/.env.*.local
+front-end-vinos/logs
+front-end-vinos/npm-debug.log*
+front-end-vinos/yarn-debug.log*
+front-end-vinos/pnpm-debug.log*
+front-end-vinos/coverage/
+
+# --- Base de datos (bbdd-vinos) ---
+bbdd-vinos/data/
