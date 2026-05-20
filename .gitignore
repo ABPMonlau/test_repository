@@ -13,10 +13,14 @@ Thumbs.db
 .agents/
 
 # --- API (Python - api-vinos) ---
+api-vinos/.venv/
 api-vinos/venv/
-api-vinos/__pycache__/
-api-vinos/*.pyc
+api-vinos/**/__pycache__/
+api-vinos/**/*.pyc
+api-vinos/**/*.pyo
 api-vinos/.env
+api-vinos/.env.local
+api-vinos/pyrightconfig.json
 
 # --- Frontend (Node/JS - front-end-vinos) ---
 front-end-vinos/node_modules/
