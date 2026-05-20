@@ -31,11 +31,26 @@ front-end-vinos (React/Vite)
   bbdd-vinos (MariaDB via Docker)
 ```
 
-La API sigue el patrón **Blueprint** de Flask para separar rutas del punto de entrada principal:
+La API sigue el patrón **Blueprint** de Flask con una separación de responsabilidades en tres capas:
+
+```
+controller/controller.py   →   lógica HTTP (rutas, respuestas JSON)
+        │
+        │  importa funciones de consulta
+        ▼
+database/queries.py        →   carga el SQL desde JSON y lo ejecuta
+        │                  │
+        │  lee al arrancar  └──→  database/querys.json  →  SQL puro
+        │  usa get_connection()
+        ▼
+database/connection.py     →   solo abre y devuelve la conexión a MariaDB
+```
 
 - `app.py` — Punto de entrada. Crea la app Flask y registra el Blueprint.
-- `controller/controller.py` — Define todas las rutas (Blueprint `main`).
-- `database/connection.py` — Función reutilizable que abre la conexión a MariaDB.
+- `controller/controller.py` — Define las rutas. **No contiene SQL**; delega en `queries.py`.
+- `database/queries.py` — Lee `querys.json` al importarse y expone funciones Python por cada consulta.
+- `database/querys.json` — Almacena el SQL puro como pares `"nombre": "SELECT ..."`. Es el único lugar donde se escribe SQL.
+- `database/connection.py` — Fábrica de conexiones. Su única responsabilidad es crear y devolver el objeto `connection` de pymysql.
 
 ---
 
@@ -104,9 +119,11 @@ api-vinos/
 ├── .venv/                  # Entorno virtual Python (ignorado por Git)
 ├── app.py                  # Punto de entrada de Flask
 ├── controller/
-│   └── controller.py       # Rutas del Blueprint "main"
+│   └── controller.py       # Rutas del Blueprint "main" (solo HTTP)
 └── database/
-    └── connection.py       # Función get_connection() para MariaDB
+    ├── connection.py       # Fábrica de conexión: get_connection()
+    ├── queries.py          # Funciones Python que ejecutan el SQL
+    └── querys.json         # SQL puro: { "nombre_query": "SELECT ..." }
 ```
 
 ### Por qué no hay `__init__.py`
@@ -122,7 +139,17 @@ Flask localiza los módulos `controller` y `database` como paquetes Python porqu
 
 ### `GET /vinos`
 
-Devuelve todos los productos de la tabla `products` de la base de datos.
+Devuelve los vinos con todos sus datos relacionados: tipo, bodega, cosecha, formato y copa.
+
+**Cadena de llamadas:**
+```
+GET /vinos
+  → controller.vinos()
+  → database.queries.get_all_vinos()
+      ↳ lee _QUERIES["get_vinos"] cargado desde querys.json
+  → database.connection.get_connection()  +  cursor.execute(sql)
+  → jsonify(data)  →  respuesta HTTP 200
+```
 
 **Request**
 ```
@@ -133,15 +160,48 @@ GET http://127.0.0.1:5000/vinos
 ```json
 [
   {
-    "producto_id": 1,
-    "cosecha_id": 1,
-    "formato_id": 2
+    "vino_nombre": "Can Sumoi La Fou",
+    "tipo_nombre": "Rosat",
+    "bodega_nombre": "Can Sumoi",
+    "zona_origen": "Penedès",
+    "anio": 2022,
+    "CONCAT(form.formato_capacidad, ' ml')": "750 ml",
+    "copa_nombre": "Copa de vino rosado"
   }
 ]
 ```
 
 > [!NOTE]
-> La query actual consulta la tabla `products`. Según el esquema de `bbdd-vinos`, la tabla de productos de venta se llama `vinos_venta`. Este endpoint deberá actualizarse cuando el esquema quede consolidado.
+> Para añadir un nuevo endpoint: primero añade la query en `querys.json`, luego crea la función en `queries.py` y finalmente la ruta en `controller.py`. Nunca escribas SQL directamente en el controlador.
+
+---
+
+### Gestión de queries — `database/querys.json`
+
+Todo el SQL del proyecto vive en este fichero JSON. `queries.py` lo carga **una sola vez al arrancar** el módulo:
+
+```python
+_QUERIES_FILE = Path(__file__).parent / "querys.json"
+_QUERIES = json.loads(_QUERIES_FILE.read_text(encoding="utf-8"))
+```
+
+Cada función de consulta accede a su query por nombre de clave:
+
+```python
+cursor.execute(_QUERIES["get_vinos"])  # lee la clave del JSON
+```
+
+**Formato del JSON:**
+```json
+{
+  "get_vinos": "SELECT v.vino_nombre, t.tipo_nombre ... FROM vinos_venta vv JOIN ...",
+  "otra_query": "SELECT ..."
+}
+```
+
+**Ventajas de este patrón:**
+- El SQL está en un único lugar → fácil de leer y modificar sin tocar código Python.
+- Añadir una nueva consulta no requiere cambiar `queries.py`, solo el JSON y crear la función que lo llame.
 
 ---
 
