@@ -1,0 +1,18 @@
+services:
+  mariadb-dev:
+    image: mariadb:latest
+    container_name: vins-la-canal
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: la-canal-admin
+      MARIADB_DATABASE: cataleg-vins
+
+    volumes:
+      # Este volumen mapea tus scripts locales dentro de la carpeta de inicio automático del contenedor
+      - ./init-scripts:/docker-entrypoint-initdb.d
+      # Opcional: este volumen mantiene los datos guardados si apagan el contenedor
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
