@@ -10,9 +10,9 @@ public class BoardRowMapper implements RowMapper<Board> {
     @Override
     public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
         Board b = new Board();
-        b.set_tableNum(rs.getInt("numero_mesa"));
-        b.set_personNum(rs.getInt("capacidad"));
-        b.set_isBooked(rs.getBoolean("activa"));
+        b.setTableNum(rs.getInt("numero_mesa"));
+        b.setPersonNum(rs.getInt("capacidad"));
+        b.setIsBooked(rs.getInt("activa") == 1);
 
         return b;
     }

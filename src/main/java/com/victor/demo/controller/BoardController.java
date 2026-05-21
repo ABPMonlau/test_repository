@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class BoardController {
@@ -15,14 +15,10 @@ public class BoardController {
     private BoardDAO boardDAO;
 
     @GetMapping("/mesas/{num}")
-    public ResponseEntity<ArrayList<Board>> get_by_personNum(@PathVariable int num) {
+    public ResponseEntity<List<Board>> get_by_personNum(@PathVariable int num) {
         System.out.println("Getting boards by person num");
 
-        ArrayList<Board> list = new ArrayList<>();
-
-        for (Board b : boardDAO.get_by_personNum(num)) {
-            list.add(b);
-        }
+        List<Board> list = boardDAO.get_by_personNum(num);
         
         if (list.isEmpty()) System.out.println("No free boards found.");
 

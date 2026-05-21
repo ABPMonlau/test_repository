@@ -1,15 +1,25 @@
 package com.victor.demo.model;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Time;
 import java.util.Date;
 
+@Entity
+@Table(name = "mesas")
 public class Board {
     @Id
     private int tableNum;
+
+    @Column(name = "activa")
     private boolean isBooked;
+
+    @Column(name = "capacidad")
     private int personNum;
+
     private Date bookDate;
     private Time bookHour;
 
@@ -30,43 +40,49 @@ public class Board {
         isBooked = true;
     }
 
-    public int get_tableNum() {
+    public Board(int tableNum, int capacity, int active) {
+        this.tableNum = tableNum;
+        personNum = capacity;
+        isBooked = (active == 1) ? false : true;
+    }
+
+    public int getTableNum() {
         return tableNum;
     }
 
-    public void set_tableNum(int tableNum) {
+    public void setTableNum(int tableNum) {
         this.tableNum = tableNum;
     }
 
-    public int get_personNum() {
+    public int getPersonNum() {
         return personNum;
     }
 
-    public void set_personNum(int personNum) {
+    public void setPersonNum(int personNum) {
         this.personNum = personNum;
     }
 
-    public Date get_bookDate() {
+    public Date getBookDate() {
         return bookDate;
     }
 
-    public void set_bookDate(Date bookDate) {
+    public void setBookDate(Date bookDate) {
         this.bookDate = bookDate;
     }
 
-    public Time get_bookHour() {
+    public Time getBookHour() {
         return bookHour;
     }
 
-    public void set_bookHour(Time bookHour) {
+    public void setBookHour(Time bookHour) {
         this.bookHour = bookHour;
     }
 
-    public void set_isBooked(boolean isBooked) {
+    public void setIsBooked(boolean isBooked) {
         this.isBooked = isBooked;
     }
 
-    public boolean is_booked() {
+    public boolean getIsBooked() {
         return isBooked;
     }
 }
