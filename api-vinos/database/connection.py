@@ -7,7 +7,8 @@ def get_connection():
     o modificar datos.
     """
     connection = pymysql.connect(
-        host="127.0.0.1",
+        host="172.17.34.40",
+        port=3307,
         user="root",
         password="la-canal-admin",
         database="cataleg-vins",
