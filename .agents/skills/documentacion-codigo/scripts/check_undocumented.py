@@ -11,7 +11,7 @@ def run_git_status():
             text=True,
             check=True
         )
-        return result.stdout.strip().split('\n')
+        return result.stdout.split('\n')
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar git status: {e}")
         return []

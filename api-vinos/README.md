@@ -1,6 +1,6 @@
 # api-vinos — Documentación Técnica
 
-API REST construida con **Python + Flask** que actúa como capa de acceso a datos entre la base de datos MariaDB (`bbdd-vinos`) y el frontend (`front-end-vinos`).
+API REST construida con **Python + Flask** que actúa como capa de acceso a datos entre la base de datos MariaDB (`bbdd`) y el frontend (`front-end-vinos`).
 
 ---
 
@@ -28,7 +28,7 @@ front-end-vinos (React/Vite)
         │
         │  pymysql
         ▼
-  bbdd-vinos (MariaDB via Docker)
+  bbdd (MariaDB via Docker)
 ```
 
 La API sigue el patrón **Blueprint** de Flask con una separación de responsabilidades en tres capas:
@@ -60,7 +60,7 @@ database/connection.py     →   solo abre y devuelve la conexión a MariaDB
 |---|---|---|
 | Python | 3.12 | Entorno de ejecución |
 | pip | — | Gestor de paquetes |
-| Docker Desktop | — | Para levantar MariaDB (`bbdd-vinos`) |
+| Docker Desktop | — | Para levantar MariaDB (`bbdd`) |
 
 Dependencias Python (instalar dentro del entorno virtual):
 
@@ -74,12 +74,12 @@ pymysql
 ## 3. Instalación y puesta en marcha
 
 > [!IMPORTANT]
-> Antes de arrancar la API asegúrate de que el contenedor de MariaDB de `bbdd-vinos` está corriendo.
+> Antes de arrancar la API asegúrate de que el contenedor de MariaDB de `bbdd` está corriendo.
 
 ### 3.1 Levantar la base de datos
 
 ```bash
-cd bbdd-vinos
+cd bbdd
 docker compose up -d
 ```
 
@@ -207,15 +207,16 @@ cursor.execute(_QUERIES["get_vinos"])  # lee la clave del JSON
 
 ## 6. Base de datos
 
-La conexión se configura directamente en `database/connection.py`:
+La conexión se configura directamente en `database/connection.py` utilizando variables de entorno o valores por defecto seguros:
 
-| Parámetro | Valor actual |
-|---|---|
-| `host` | `127.0.0.1` |
-| `user` | `root` |
-| `password` | `la-canal-admin` |
-| `database` | `cataleg-vins` |
-| `cursorclass` | `DictCursor` (resultados como diccionarios) |
+| Parámetro | Valor por defecto | Variable de entorno |
+|---|---|---|
+| `host` | `localhost` | `DB_HOST` |
+| `port` | `3306` | `DB_PORT` |
+| `user` | `vinosadmin` | `DB_USER` |
+| `password` | `1234` | `DB_PASSWORD` |
+| `database` | `cataleg-vins` | `DB_NAME` |
+| `cursorclass` | `DictCursor` (resultados como diccionarios) | — |
 
 El uso de `DictCursor` hace que cada fila retornada sea un `dict` Python con los nombres de columna como claves, lo que permite serializarla directamente a JSON.
 
@@ -231,9 +232,10 @@ Actualmente no existe un archivo `.env`. El objetivo es moverlo aquí para no te
 Crear un archivo `.env` en la raíz de `api-vinos/` (este archivo está en `.gitignore`):
 
 ```env
-DB_HOST=127.0.0.1
-DB_USER=root
-DB_PASSWORD=la-canal-admin
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=vinosadmin
+DB_PASSWORD=1234
 DB_NAME=cataleg-vins
 ```
 
