@@ -10,7 +10,6 @@ Thumbs.db
 *.sw?
 *.log
 .gemini/
-.agents/
 
 # --- API (Python - api-vinos) ---
 api-vinos/.venv/
