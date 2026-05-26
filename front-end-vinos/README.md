@@ -24,13 +24,17 @@ Interfaz web del catálogo de vinos de **La Canal**, desarrollada con **React 19
 ```text
 front-end-vinos/
 ├── src/
-│   ├── main.jsx            — Punto de entrada, renderiza App dentro de StrictMode
-│   ├── App.jsx             — Componente principal con BrowserRouter y rutas (en desarrollo)
+│   ├── main.jsx            — Punto de entrada, renderiza App envuelto en BrowserRouter
+│   ├── App.jsx             — Componente principal con la definición de rutas (Routes)
 │   ├── App.css             — Estilos del componente App
-│   ├── index.css           — Estilos CSS globales
-│   ├── assets/             — Recursos estáticos (logos, imágenes)
+│   ├── index.css           — Estilos CSS globales y tokens de diseño
+│   ├── assets/             — Recursos estáticos (logos, imágenes oficiales)
+│   ├── pages/
+│   │   └── index.jsx       — Orquestador de la página de inicio (Landing Page)
 │   └── components/
-│       ├── NavBar.jsx      — Barra de navegación
+│       ├── NavBar.jsx      — Barra de navegación con soporte SPA y scroll activo
+│       ├── Hero.jsx        — Banner de presentación editorial atrevido y asimétrico
+│       ├── HeroImageCard.jsx — Componente modular para las imágenes del collage 3D
 │       ├── ListaVino.jsx   — Listado de vinos
 │       └── CardVino.jsx    — Tarjeta individual de vino
 ├── public/                 — Archivos estáticos públicos
@@ -48,13 +52,15 @@ front-end-vinos/
 
 | Componente | Archivo | Descripción | Estado |
 |---|---|---|---|
-| **App** | `src/App.jsx` | Componente raíz. Configura `BrowserRouter` y define las rutas de la aplicación. | 🚧 En desarrollo |
-| **NavBar** | `src/components/NavBar.jsx` | Barra de navegación principal del sitio. | 🚧 En desarrollo |
+| **App** | `src/App.jsx` | Componente raíz. Define las rutas principales del enrutador (`<Routes>`). | ✅ Listo |
+| **NavBar** | `src/components/NavBar.jsx` | Barra de navegación interactiva con scroll suave al inicio en la Home. | ✅ Listo |
+| **Hero** | `src/components/Hero.jsx` | Banner de bienvenida con estructura editorial asimétrica en 3D y maquetación móvil dedicada. | ✅ Listo |
+| **HeroImageCard** | `src/components/HeroImageCard.jsx` | Componente modular que optimiza y encuadra las imágenes en marcos dobles con hover states. | ✅ Listo |
 | **ListaVino** | `src/components/ListaVino.jsx` | Muestra el listado completo de vinos obtenidos desde la API. | 🚧 En desarrollo |
 | **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida de un vino individual. | 🚧 En desarrollo |
 
 > [!IMPORTANT]
-> Todos los componentes se encuentran actualmente **en fase de desarrollo**. Su estructura base está creada, pero la lógica y el diseño final están pendientes de implementación.
+> La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de componentes modulares del Hero y NavBar están completamente finalizados. Los componentes del catálogo de vinos (`ListaVino` y `CardVino`) continúan en fase de desarrollo.
 
 ---
 

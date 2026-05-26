@@ -10,6 +10,10 @@ Thumbs.db
 *.sw?
 *.log
 .gemini/
+.antigravitycli/
+
+# --- Dependencias globales / Node ---
+node_modules/
 
 # --- API (Python - api-vinos) ---
 api-vinos/.venv/
@@ -36,5 +40,5 @@ front-end-vinos/yarn-debug.log*
 front-end-vinos/pnpm-debug.log*
 front-end-vinos/coverage/
 
-# --- Base de datos (bbdd-vinos) ---
-bbdd-vinos/data/
+# --- Base de datos (bbdd) ---
+bbdd/**/data/

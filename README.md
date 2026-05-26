@@ -135,6 +135,7 @@ ABP/
 └── docs/                              # Documentación global
     ├── documentacion-bbdd-vinos.md
     ├── documentacion-bbdd-reservas.md
+    ├── frontend-architecture.md
     └── git-ignore-explanations.md
 ```
 
@@ -149,6 +150,7 @@ ABP/
 | [front-end-vinos/README.md](front-end-vinos/README.md) | Documentación del frontend |
 | [front-end-vinos/instrucciones.md](front-end-vinos/instrucciones.md) | Guía de inicio del frontend |
 | [front-end-vinos/docs/react-router.md](front-end-vinos/docs/react-router.md) | Guía de uso de React Router |
+| [docs/frontend-architecture.md](docs/frontend-architecture.md) | Arquitectura y estructura detallada del frontend |
 | [docs/documentacion-bbdd-vinos.md](docs/documentacion-bbdd-vinos.md) | Esquema detallado de `cataleg-vins` |
 | [docs/documentacion-bbdd-reservas.md](docs/documentacion-bbdd-reservas.md) | Esquema detallado de `reservas_lacanal` |
 | [docs/git-ignore-explanations.md](docs/git-ignore-explanations.md) | Explicación de reglas del `.gitignore` |
