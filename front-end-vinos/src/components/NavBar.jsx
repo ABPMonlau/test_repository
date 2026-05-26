@@ -3,6 +3,11 @@ import { useState } from 'react'
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  // --- CONFIGURACIÓN DEL LOGO DEL RESTAURANTE ---
+  // Si tienes un archivo de logo (ej. PNG o SVG), puedes poner la ruta aquí (ej. "/logo.svg" o importar el recurso).
+  // Si se deja vacío (null o ""), el componente mostrará automáticamente el elegante texto tipográfico oficial.
+  const logoUrl = ""; 
+
   const handleReservationClick = () => {
     setIsOpen(false);
     alert("Redirigint al sistema de reserves de taules...");
@@ -10,7 +15,7 @@ export default function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 bg-canal-bg/90 backdrop-blur-md border-b border-canal-border/20 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center justify-between lg:grid lg:grid-cols-3">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between lg:grid lg:grid-cols-3">
         
         {/* Lado Izquierdo: Enlaces (Escritorio) */}
         <nav className="hidden lg:flex items-center gap-8 justify-start">
@@ -25,10 +30,20 @@ export default function NavBar() {
           </a>
         </nav>
 
-        {/* Centro: Logotipo Simétrico (Filosofía de la Marca) */}
-        <div className="flex justify-start lg:justify-center">
-          <a href="/" className="font-serif-romana text-xl md:text-2xl uppercase tracking-[0.25em] text-canal-text hover:opacity-80 transition-opacity font-normal">
-            La Canal
+        {/* Centro: Logotipo Simétrico (Imagen o Texto Fallback) */}
+        <div className="flex justify-start lg:justify-center items-center">
+          <a href="/" className="flex items-center justify-center group">
+            {logoUrl ? (
+              <img 
+                src={logoUrl} 
+                alt="Logotip Restaurant La Canal" 
+                className="h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              <span className="font-serif-romana text-xl md:text-2xl uppercase tracking-[0.25em] text-canal-text hover:opacity-80 transition-opacity font-normal">
+                La Canal
+              </span>
+            )}
           </a>
         </div>
 
