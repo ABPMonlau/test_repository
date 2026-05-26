@@ -26,12 +26,14 @@ export default function NavBar() {
             Menús
           </a>
           <a href="#celler" className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium">
-            El Celler
+            El Celler 
           </a>
         </nav>
 
         {/* Centro: Logotipo Simétrico (Imagen o Texto Fallback) */}
         <div className="flex justify-start lg:justify-center items-center">
+
+          
           <a href="/" className="flex items-center justify-center group">
             {logoUrl ? (
               <img 
