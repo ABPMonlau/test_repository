@@ -7,7 +7,6 @@ export default function NavBar() {
   // --- CONFIGURACIÓN DEL LOGO DEL RESTAURANTE ---
   // Si tienes un archivo de logo (ej. PNG o SVG), puedes poner la ruta aquí (ej. "/logo.svg" o importar el recurso).
   // Si se deja vacío (null o ""), el componente mostrará automáticamente el elegante texto tipográfico oficial.
-  const logoUrl = "";
 
   const handleReservationClick = () => {
     setIsOpen(false);
@@ -20,23 +19,23 @@ export default function NavBar() {
         {/* Lado Izquierdo: Enlaces (Escritorio) */}
         <nav className="hidden lg:flex items-center gap-8 justify-start">
           <a
-            href="#carta"
+            href="/#carta"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             La Carta
           </a>
           <a
-            href="#menus"
+            href="/#menus"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Menús
           </a>
-          <a
-            href="#celler"
+          <Link
+            to="/celler"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             El Celler
-          </a>
+          </Link>
         </nav>
 
         {/* Centro: Logotipo Simétrico (Imagen o Texto Fallback) */}
@@ -60,7 +59,7 @@ export default function NavBar() {
         {/* Lado Derecho: Enlace y CTA (Escritorio) */}
         <div className="hidden lg:flex items-center gap-8 justify-end">
           <a
-            href="#filosofia"
+            href="/#filosofia"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Filosofia
@@ -116,28 +115,28 @@ export default function NavBar() {
           <div className="border border-canal-border/40 p-1 w-full max-w-xs bg-canal-bg">
             <div className="border border-canal-border/40 py-8 px-4 flex flex-col gap-6 items-center text-center">
               <a
-                href="#carta"
+                href="/#carta"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 La Carta
               </a>
               <a
-                href="#menus"
+                href="/#menus"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Menús
               </a>
-              <a
-                href="#celler"
+              <Link
+                to="/celler"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 El Celler
-              </a>
+              </Link>
               <a
-                href="#filosofia"
+                href="/#filosofia"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
