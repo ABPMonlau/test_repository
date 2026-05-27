@@ -56,11 +56,12 @@ front-end-vinos/
 | **NavBar** | `src/components/NavBar.jsx` | Barra de navegación interactiva con scroll suave al inicio en la Home. | ✅ Listo |
 | **Hero** | `src/components/Hero.jsx` | Banner de bienvenida con estructura editorial asimétrica en 3D y maquetación móvil dedicada. | ✅ Listo |
 | **HeroImageCard** | `src/components/HeroImageCard.jsx` | Componente modular que optimiza y encuadra las imágenes en marcos dobles con hover states. | ✅ Listo |
-| **ListaVino** | `src/components/ListaVino.jsx` | Muestra el listado completo de vinos obtenidos desde la API. | 🚧 En desarrollo |
-| **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida de un vino individual. | 🚧 En desarrollo |
+| **ListaVinos** | `src/components/ListaVinos.jsx` | Muestra el listado completo de vinos obtenidos desde la API con buscador y filtros rápidos. | ✅ Listo |
+| **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida e imágenes dinámicas de un vino individual. | ✅ Listo |
 
 > [!IMPORTANT]
-> La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de componentes modulares del Hero y NavBar están completamente finalizados. Los componentes del catálogo de vinos (`ListaVino` y `CardVino`) continúan en fase de desarrollo.
+> La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de todos los componentes modulares de vinos (`ListaVinos` y `CardVino`), del Hero y del NavBar están **completamente finalizados y validados**.
+
 
 ---
 

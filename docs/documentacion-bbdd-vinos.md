@@ -2,7 +2,14 @@
 
 Base de datos del catálogo de vinos del restaurante La Canal. Almacena toda la información sobre vinos, uvas, bodegas, tipos, formatos, copas, cosechas y productos a la venta.
 
+> [!NOTE]
+> Tras la unificación de la infraestructura, los scripts SQL de inicialización correspondientes se ubican en:
+> - Esquema de Tablas: [`bbdd/init-scripts/02-schema-vinos.sql`](file:///Users/heernaa/Desktop/ABP%20(LACANAL)/test_repository/bbdd/init-scripts/02-schema-vinos.sql)
+> - Carga de Datos: [`bbdd/init-scripts/03-data-vinos.sql`](file:///Users/heernaa/Desktop/ABP%20(LACANAL)/test_repository/bbdd/init-scripts/03-data-vinos.sql)
+> Estos archivos se ejecutan en secuencia al inicializar el contenedor Docker.
+
 ---
+
 
 ## Tablas del Esquema
 

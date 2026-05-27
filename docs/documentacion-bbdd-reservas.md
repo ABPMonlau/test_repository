@@ -116,7 +116,7 @@ Tabla central del sistema. Cada registro vincula un **cliente** con una **mesa**
 | `id_cliente`        | `INT`                                                     | NO     | —                    | `NOT NULL`, **FK → clientes** | Cliente que realiza la reserva           |
 | `id_mesa`           | `INT`                                                     | NO     | —                    | `NOT NULL`, **FK → mesas**    | Mesa asignada a la reserva               |
 | `fecha_reserva`     | `DATE`                                                    | NO     | —                    | `NOT NULL`                    | Fecha de la reserva                      |
-| `hora_reserva`      | `TIME`                                                    | NO     | —                    | `NOT NULL`                    | Hora de la reserva                       |
+| `hora_reserva`      | `INT`                                                     | NO     | —                    | `NOT NULL`                    | Hora/Turno de la reserva (formato entero)|
 | `cantidad_personas` | `INT`                                                     | NO     | —                    | `NOT NULL`                    | Número de comensales                     |
 | `estado`            | `ENUM('Pendiente','Confirmada','Cancelada','Completada')` | SÍ     | `'Pendiente'`        | —                             | Estado actual de la reserva              |
 | `notas_especiales`  | `TEXT`                                                     | SÍ     | `NULL`               | —                             | Comentarios o peticiones del cliente     |
@@ -128,7 +128,7 @@ CREATE TABLE `reservas` (
   `id_cliente` int NOT NULL,
   `id_mesa` int NOT NULL,
   `fecha_reserva` date NOT NULL,
-  `hora_reserva` time NOT NULL,
+  `hora_reserva` int NOT NULL,
   `cantidad_personas` int NOT NULL,
   `estado` enum('Pendiente','Confirmada','Cancelada','Completada') DEFAULT 'Pendiente',
   `notas_especiales` text,
@@ -337,12 +337,13 @@ Se utiliza un `ENUM('Pendiente','Confirmada','Cancelada','Completada')` en lugar
 
 Para este proyecto, los cuatro estados cubren el ciclo de vida completo de una reserva y no se prevé que cambien con frecuencia, por lo que `ENUM` es la opción más práctica.
 
-### 6.4 Separación `fecha_reserva` / `hora_reserva`
+### 6.4 Separación `fecha_reserva` / `hora_reserva` (Uso de `INT` para horas/turnos)
 
-Se optó por campos separados `DATE` y `TIME` en lugar de un solo `DATETIME` para facilitar:
-- Consultas por fecha (ej: "todas las reservas de hoy") sin funciones de extracción.
-- Consultas por franja horaria (ej: "reservas entre las 20:00 y las 22:00").
-- Mayor claridad en la interfaz de usuario y la API.
+Se optó por campos separados `DATE` y `INT` en lugar de un solo `DATETIME` o tipo `TIME` para facilitar:
+- **Indexación por turnos/slots:** Representar la hora de servicio mediante enteros (por ejemplo, identificadores de turnos como `1` para almuerzo, `2` para cena; o bien horas representadas de forma simple como minutos transcurridos o slots de servicio).
+- **Simplificación del modelo en React:** Aliviar al frontend de parsear tipos `TIME` complejos de SQL, facilitando comparaciones directas de turnos de reserva con operaciones enteras básicas.
+- **Consultas eficientes:** Búsquedas optimizadas por rango de fecha y slots de turnos sin conversiones de zona horaria o de formato temporal en el motor de base de datos.
+
 
 ### 6.5 Campo `activa` en `mesas`
 
