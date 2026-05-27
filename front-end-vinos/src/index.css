@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paleta Orgánica de La Canal */
+  /* Paleta Orgánica de La Canal (Ajustada para mayor accesibilidad y contraste) */
   --color-canal-bg: #FAF6F0;
-  --color-canal-alt: #F3EFE9;
-  --color-canal-text: #1C1B1A;
-  --color-canal-secondary: #59544B;
-  --color-canal-border: #A8A396;
+  --color-canal-alt: #EBE5DA; /* Ajustado de #F3EFE9 a #EBE5DA para mejorar contraste de bloques */
+  --color-canal-text: #141312; /* Ajustado de #1C1B1A a #141312 para mayor nitidez */
+  --color-canal-secondary: #4A453C; /* Ajustado de #59544B a #4A453C (Contraste superior a 7:1) */
+  --color-canal-border: #8F897D; /* Ajustado de #A8A396 a #8F897D (Contraste superior a 3:1) */
 
   /* Jerarquía Tipográfica */
   --font-serif-romana: 'Cinzel', 'Cormorant Garamond', serif;
@@ -55,16 +55,16 @@ body {
 
 /* --- Estilos Avanzados de La Canal --- */
 
-/* Doble Marco Perimetral Característico */
+/* Doble Marco Perimetral Característico (Optimizado para mayor contraste) */
 .double-border-frame {
-  border: 1px solid rgba(168, 163, 150, 0.45);
+  border: 1px solid rgba(143, 137, 125, 0.65); /* Aumentado contraste de borde de 0.45 a 0.65 */
   padding: 6px;
   background-color: var(--color-canal-bg);
   transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .double-border-frame-inner {
-  border: 1px solid rgba(168, 163, 150, 0.35);
+  border: 1px solid rgba(143, 137, 125, 0.50); /* Aumentado contraste de borde de 0.35 a 0.50 */
   transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

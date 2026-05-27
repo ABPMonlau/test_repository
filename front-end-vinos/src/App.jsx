@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Index from "./pages";
 import Celler from "./pages/Celler";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Index />} />
         <Route path="/celler" element={<Celler />} />
       </Routes>
+      <Footer />
     </main>
   );
 }

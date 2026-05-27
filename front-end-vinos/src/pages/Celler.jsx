@@ -97,7 +97,7 @@ export default function Celler() {
     <div className="min-h-screen bg-canal-bg flex flex-col">
       
       {/* --- HERO EDITORIAL DE LA BODEGA --- */}
-      <section className="relative w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-16 pb-12 overflow-hidden marble-subtle-bg flex flex-col items-center justify-center text-center gap-6">
+      <section className="relative w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-9 pb-12 overflow-hidden marble-subtle-bg flex flex-col items-center justify-center text-center gap-2">
         
         {/* Marca de fondo 3D gigante atenuada */}
         <div className="absolute top-[15%] pointer-events-none select-none z-0 opacity-[0.03] hidden md:block">
@@ -121,7 +121,7 @@ export default function Celler() {
 
         {/* Bloque de Cabecera con Doble Borde */}
         <div className="double-border-frame w-full max-w-2xl z-10 shadow-lg mt-2">
-          <div className="double-border-frame-inner px-8 py-10 md:px-12 md:py-14 flex flex-col items-center gap-4">
+          <div className="double-border-frame-inner px-8 py-10 md:px-20 md:py-14 flex flex-col items-center gap-4">
             
             {/* Sello de Ubicación */}
             <span className="font-sans-humanist text-[9px] uppercase tracking-[0.3em] text-canal-secondary font-bold">
