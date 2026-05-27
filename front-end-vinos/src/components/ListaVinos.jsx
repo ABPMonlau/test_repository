@@ -1,7 +1,7 @@
-import { useState, useMemo } from "react";
+import {useState, useMemo} from "react";
 import CardVino from "./CardVino";
 
-export default function ListaVinos({ vinos, isLoading, error }) {
+export default function ListaVinos({vinos, isLoading, error}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("all");
 
@@ -16,7 +16,8 @@ export default function ListaVinos({ vinos, isLoading, error }) {
       const matchType =
         selectedType === "all" ||
         (vino.tipo_nombre &&
-          vino.tipo_nombre.toLowerCase().trim() === selectedType.toLowerCase().trim());
+          vino.tipo_nombre.toLowerCase().trim() ===
+            selectedType.toLowerCase().trim());
 
       return matchSearch && matchType;
     });
@@ -59,7 +60,8 @@ export default function ListaVinos({ vinos, isLoading, error }) {
     if (normalized === "tinto") return "Vins Tints / Vinos Tintos";
     if (normalized === "blanco") return "Vins Blancs / Vinos Blancos";
     if (normalized === "espumoso") return "Vins Escumosos / Espumosos";
-    if (normalized === "rosado" || normalized === "rosat") return "Vins Rosats / Rosados";
+    if (normalized === "rosado" || normalized === "rosat")
+      return "Vins Rosats / Rosados";
     return type.toUpperCase();
   };
 
@@ -73,7 +75,10 @@ export default function ListaVinos({ vinos, isLoading, error }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14 max-w-[1400px] mx-auto px-6 md:px-12 w-full">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="double-border-frame w-full max-w-sm mx-auto opacity-70">
+            <div
+              key={n}
+              className="double-border-frame w-full max-w-sm mx-auto opacity-70"
+            >
               <div className="double-border-frame-inner p-6 flex flex-col gap-6">
                 <div className="w-full aspect-[3/4] bg-canal-border/10 animate-pulse border border-canal-border/5"></div>
                 <div className="flex flex-col gap-3 items-center">
@@ -95,9 +100,12 @@ export default function ListaVinos({ vinos, isLoading, error }) {
     return (
       <div className="double-border-frame max-w-lg mx-auto my-12 text-center">
         <div className="double-border-frame-inner p-8 flex flex-col gap-4 items-center">
-          <span className="font-serif-romana uppercase tracking-widest text-canal-secondary text-sm">Error de connexió</span>
+          <span className="font-serif-romana uppercase tracking-widest text-canal-secondary text-sm">
+            Error de connexió
+          </span>
           <p className="font-sans-humanist text-xs text-canal-secondary font-light leading-relaxed">
-            No s'ha pogut establir la connexió con la bodega de datos. Per favor, verifica que el servei API estigui iniciat.
+            No s'ha pogut establir la connexió con la bodega de datos. Per
+            favor, verifica que el servei API estigui iniciat.
           </p>
         </div>
       </div>
@@ -105,11 +113,9 @@ export default function ListaVinos({ vinos, isLoading, error }) {
   }
 
   return (
-    <div className="w-full flex flex-col gap-10 py-4">
-      
+    <div className="w-full flex flex-col gap-8 pt-12 pb-8">
       {/* --- PANEL DE BUSCADOR Y FILTROS RÁPIDOS --- */}
-      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 flex flex-col md:flex-row gap-6 justify-between items-center z-20">
-        
+      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 flex flex-col gap-8 justify-center items-center z-20">
         {/* Buscador de estilo editorial */}
         <div className="relative w-full md:max-w-md group">
           <input
@@ -120,74 +126,90 @@ export default function ListaVinos({ vinos, isLoading, error }) {
             className="w-full bg-canal-bg border border-canal-border/40 hover:border-canal-border text-canal-text font-sans-humanist text-xs uppercase tracking-wider py-3.5 pl-5 pr-12 focus:outline-none focus:border-canal-text transition-all duration-300 placeholder:text-canal-secondary/50 placeholder:italic"
           />
           <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-canal-secondary/60 group-focus-within:text-canal-text duration-300">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
           </div>
         </div>
 
-        {/* Filtros de Tipo en All-Caps y espaciado */}
         <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
           <button
             onClick={() => setSelectedType("all")}
             className={`px-4 py-2 border text-[9px] font-sans-humanist uppercase tracking-[0.2em] font-semibold transition-all duration-300 cursor-pointer active:scale-95 ${
-              selectedType === "all"
-                ? "bg-canal-text text-canal-bg border-canal-text"
-                : "border-canal-border/40 text-canal-secondary hover:border-canal-text hover:text-canal-text"
+              selectedType === "all" ?
+                "bg-canal-text text-canal-bg border-canal-text"
+              : "border-canal-border/40 text-canal-secondary hover:border-canal-text hover:text-canal-text"
             }`}
           >
             Tots / Todos
           </button>
-          
+
           {uniqueTypes.map((type) => (
             <button
               key={type}
               onClick={() => setSelectedType(type)}
               className={`px-4 py-2 border text-[9px] font-sans-humanist uppercase tracking-[0.2em] font-semibold transition-all duration-300 cursor-pointer active:scale-95 ${
-                selectedType.toLowerCase().trim() === type.toLowerCase().trim()
-                  ? "bg-canal-text text-canal-bg border-canal-text"
-                  : "border-canal-border/40 text-canal-secondary hover:border-canal-text hover:text-canal-text"
+                (
+                  selectedType.toLowerCase().trim() ===
+                  type.toLowerCase().trim()
+                ) ?
+                  "bg-canal-text text-canal-bg border-canal-text"
+                : "border-canal-border/40 text-canal-secondary hover:border-canal-text hover:text-canal-text"
               }`}
             >
               {type}
             </button>
           ))}
         </div>
-
       </div>
 
+      {/* Filtros de Tipo en All-Caps y espaciado */}
+
       {/* --- LISTADO AGRUPADO DE VINOS --- */}
-      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 flex flex-col gap-16 md:gap-20 mt-4">
-        {Object.keys(groupedVinos).length > 0 ? (
+      <div className="max-w-[1400px] mx-auto w-full px-6 md:px-12 flex flex-col gap-8 md:gap-16 mt-0">
+        {Object.keys(groupedVinos).length > 0 ?
           Object.keys(groupedVinos).map((tipo) => (
             <section key={tipo} className="flex flex-col gap-8">
-              
               {/* Encabezado elegante de la Categoría */}
-              <div className="border-b border-canal-border/30 pb-3 flex justify-between items-end">
+              <div className="border-b border-canal-border/30 pb-6 flex justify-between items-end">
                 <h2 className="font-serif-romana text-xl md:text-2xl uppercase tracking-[0.18em] text-canal-text font-semibold">
                   {formatTypeHeader(tipo)}
                 </h2>
                 <span className="font-serif-italic italic text-xs md:text-sm text-canal-secondary font-medium lowercase select-none">
-                  {groupedVinos[tipo].length} {groupedVinos[tipo].length === 1 ? "vi disponible" : "vins disponibles"}
+                  {groupedVinos[tipo].length}{" "}
+                  {groupedVinos[tipo].length === 1 ?
+                    "vi disponible"
+                  : "vins disponibles"}
                 </span>
               </div>
 
               {/* Grid de las Tarjetas de Vinos */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
                 {groupedVinos[tipo].map((vino, idx) => (
                   <CardVino key={`${vino.vino_nombre}-${idx}`} vino={vino} />
                 ))}
               </div>
-
             </section>
           ))
-        ) : (
-          /* Estado sin resultados */
+        : /* Estado sin resultados */
           <div className="double-border-frame max-w-md mx-auto my-10 text-center">
             <div className="double-border-frame-inner p-10 flex flex-col gap-4 items-center">
-              <span className="font-serif-romana uppercase tracking-widest text-canal-secondary text-xs">Sense resultats</span>
+              <span className="font-serif-romana uppercase tracking-widest text-canal-secondary text-xs">
+                Sense resultats
+              </span>
               <p className="font-sans-humanist text-[11px] text-canal-secondary/70 font-light leading-relaxed">
-                No s'han trobat vins que coincideixin con los criteris de cerca seleccionats.
+                No s'han trobat vins que coincideixin con los criteris de cerca
+                seleccionats.
               </p>
               <button
                 onClick={() => {
@@ -200,11 +222,8 @@ export default function ListaVinos({ vinos, isLoading, error }) {
               </button>
             </div>
           </div>
-        )}
+        }
       </div>
-
     </div>
   );
 }
-
-

@@ -65,12 +65,12 @@ graph TD
 
 El diseño visual está totalmente alineado con las *Directrices de Identidad de La Canal* y se implementa usando la especificación del nuevo motor **Tailwind CSS v4** configurado en `src/index.css`.
 
-### A. Paleta Orgánica de Colores:
+### A. Paleta Orgánica de Colores (Optimizada para Accesibilidad):
 * **Fondo Principal (`--color-canal-bg`):** `#FAF6F0` (Marfil cálido mate, evita el brillo blanco de pantallas).
-* **Fondo Alternativo (`--color-canal-alt`):** `#F3EFE9` (Tono piedra caliza).
-* **Texto Principal (`--color-canal-text`):** `#1C1B1A` (Gris antracita, reduce la fatiga visual al leer).
-* **Texto Secundario (`--color-canal-secondary`):** `#59544B` (Marrón ceniza de contraste medio).
-* **Bordes y Delimitadores (`--color-canal-border`):** `#A8A396` (Bronce taupe envejecido).
+* **Fondo Alternativo (`--color-canal-alt`):** `#EBE5DA` (Tono piedra caliza, ajustado para mayor contraste de áreas).
+* **Texto Principal (`--color-canal-text`):** `#141312` (Gris antracita profundo, aumentado para mayor legibilidad y nitidez).
+* **Texto Secundario (`--color-canal-secondary`):** `#4A453C` (Marrón ceniza oscuro de contraste superior a 7:1).
+* **Bordes y Delimitadores (`--color-canal-border`):** `#8F897D` (Bronce taupe, ajustado para garantizar contraste superior a 3:1 en interfaces gráficas).
 
 ### B. Tipografías Oficiales:
 * **Serif Romana (`--font-serif-romana`):** `Cinzel` / `Cormorant Garamond` (Siempre en mayúsculas para títulos, transmitiendo elegancia y tradición).
