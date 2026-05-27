@@ -1,0 +1,3 @@
+{
+  "get_vinos": "select v.vino_nombre, t.tipo_nombre, b.bodega_nombre , v.zona_origen , c.anio , CONCAT(form.formato_capacidad, ' ml') as Capacidad, cop.copa_nombre from vinos_venta vv join cosechas c on c.cosecha_id = vv.cosecha_id join formatos form on vv.formato_id = form.formato_id join vinos v on c.vino_id = v.vino_id join tipos t on t.tipo_id = v.vino_tipo join copas cop on cop.copa_id = v.copa_id join bodegas b on b.bodega_id = v.bodega;"
+}

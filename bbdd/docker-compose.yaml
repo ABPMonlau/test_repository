@@ -1,0 +1,16 @@
+services:
+  db-la-canal:
+    image: mariadb:latest
+    container_name: db-la-canal
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: la-canal-admin
+    volumes:
+      # Scripts de inicialización (se ejecutan en orden alfabético)
+      - ./init-scripts:/docker-entrypoint-initdb.d
+      # Volumen persistente para los datos
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
