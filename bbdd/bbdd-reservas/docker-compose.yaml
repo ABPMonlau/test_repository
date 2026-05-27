@@ -1,0 +1,20 @@
+services:
+  mariadb-dev:
+    image: mysql:latest
+    container_name: reservas-la-canal
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: reservas_lacanal
+      MYSQL_USER: adminreservas
+      MYSQL_PASSWORD: 1234
+
+    volumes:
+      # Este volumen mapea tus scripts locales dentro de la carpeta de inicio automático del contenedor
+      - ./init-scripts:/docker-entrypoint-initdb.d
+      # Opcional: este volumen mantiene los datos guardados si apagan el contenedor
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
