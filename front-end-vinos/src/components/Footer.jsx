@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 export default function Footer() {
   return (
     <footer className="w-full bg-canal-alt border-t border-canal-border/20 py-16 md:py-16 px-6">
-      <div className="max-w-[1400px] mx-auto flex flex-col items-center">
+      <div className="max-w-350 mx-auto flex flex-col items-center">
         <div className="flex flex-col items-center text-center gap-8 w-full max-w-xl">
           {/* Logo / Nombre */}
           <Link
@@ -55,7 +55,7 @@ export default function Footer() {
               </div>
 
               {/* Separador fino */}
-              <div className="w-12 h-[1px] bg-canal-border/40 my-1"></div>
+              <div className="w-12 h-px bg-canal-border/40 my-1"></div>
 
               {/* Enlace Instagram */}
               <a

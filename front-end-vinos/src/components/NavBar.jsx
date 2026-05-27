@@ -24,12 +24,12 @@ export default function NavBar() {
           >
             La Carta
           </a>
-          <a
-            href="/#menus"
+          <Link
+            to="/menus"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Menús
-          </a>
+          </Link>
           <Link
             to="/celler"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
@@ -121,13 +121,13 @@ export default function NavBar() {
               >
                 La Carta
               </a>
-              <a
-                href="/#menus"
+              <Link
+                to="/menus"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Menús
-              </a>
+              </Link>
               <Link
                 to="/celler"
                 onClick={() => setIsOpen(false)}
