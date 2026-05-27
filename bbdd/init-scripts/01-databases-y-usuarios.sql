@@ -15,7 +15,7 @@ CREATE DATABASE IF NOT EXISTS `cataleg-vins` DEFAULT CHARACTER SET utf8mb4 COLLA
 -- --------------------------
 CREATE DATABASE IF NOT EXISTS `reservas_lacanal` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
-CREATE DATABASE IF NOT EXISTS `users` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `usuarios-lacanal` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- --------------------------
 -- Usuario: reservasadmin
@@ -40,6 +40,6 @@ GRANT ALL PRIVILEGES ON `cataleg-vins`.* TO 'vinosadmin' @'%';
 
 CREATE USER IF NOT EXISTS 'usersadmin' @'%' IDENTIFIED BY '1234';
 
-GRANT ALL PRIVILEGES ON `users`.* TO 'usersadmin' @'%';
+GRANT ALL PRIVILEGES ON `usuarios-lacanal`.* TO 'usersadmin' @'%';
 
 FLUSH PRIVILEGES;

@@ -1,4 +1,4 @@
-USE `users`;
+USE `usuarios-lacanal`;
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
