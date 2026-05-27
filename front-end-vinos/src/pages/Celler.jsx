@@ -121,7 +121,7 @@ export default function Celler() {
 
         {/* Bloque de Cabecera con Doble Borde */}
         <div className="double-border-frame w-full max-w-2xl z-10 shadow-lg mt-2">
-          <div className="double-border-frame-inner px-8 py-10 md:px-12 md:py-14 flex flex-col items-center gap-4">
+          <div className="double-border-frame-inner px-8 py-10 md:px-20 md:py-14 flex flex-col items-center gap-4">
             
             {/* Sello de Ubicación */}
             <span className="font-sans-humanist text-[9px] uppercase tracking-[0.3em] text-canal-secondary font-bold">
