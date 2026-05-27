@@ -1,6 +1,6 @@
 # ABP Vinos — La Canal
 
-Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo de vinos y un sistema de reservas. Proyecto ABP desarrollado por un equipo de 5 integrantes.
+Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo de vinos, un sistema de reservas y un panel de administración de accesos. Proyecto ABP desarrollado por un equipo de 5 integrantes.
 
 ---
 
@@ -34,6 +34,10 @@ Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo
 │  │  reservas_lacanal │  │
 │  │  (3 tablas)       │  │
 │  └───────────────────┘  │
+│  ┌───────────────────┐  │
+│  │  usuarios-lacanal │  │
+│  │  (1 tabla)        │  │
+│  └───────────────────┘  │
 └─────────────────────────┘
 ```
 
@@ -43,7 +47,7 @@ Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo
 
 | Componente | Tecnología | Puerto | Descripción |
 |------------|-----------|--------|-------------|
-| **bbdd** | MariaDB (Docker) | 3306 | Base de datos unificada con dos esquemas |
+| **bbdd** | MariaDB (Docker) | 3306 | Base de datos unificada con tres esquemas |
 | **api-vinos** | Python 3 + Flask | 5000 | API REST para el catálogo de vinos |
 | **front-end-vinos** | React 19 + Vite 8 | 5173 | Interfaz web del catálogo |
 
@@ -75,7 +79,7 @@ cd api-vinos
 # Solo la primera vez: crear entorno virtual e instalar dependencias
 python3 -m venv .venv
 source .venv/bin/activate      # macOS / Linux
-pip install flask pymysql
+pip install flask pymysql flask-cors
 
 # Arrancar el servidor
 python app.py
@@ -106,22 +110,24 @@ La aplicación estará disponible en `http://localhost:5173`
 | `root` | `la-canal-admin` | Superusuario — acceso total |
 | `vinosadmin` | `1234` | Solo `cataleg-vins` |
 | `reservasadmin` | `1234` | Solo `reservas_lacanal` |
+| `usersadmin` | `1234` | Solo `usuarios-lacanal` |
 
 ---
 
 ## Estructura del Repositorio
 
 ```text
-ABP/
+test_repository/
 ├── README.md                          ← Este archivo
 ├── bbdd/                              # Base de datos unificada
 │   ├── docker-compose.yaml
 │   ├── instrucciones.md
 │   └── init-scripts/
-│       ├── 01-databases-y-usuarios.sql
-│       ├── 02-schema-vinos.sql
-│       ├── 03-data-vinos.sql
-│       └── 04-schema-reservas.sql
+│       ├── 01-databases-y-usuarios.sql   # Crea las 3 BD y usuarios
+│       ├── 02-schema-vinos.sql           # Esquema de la BD de vinos
+│       ├── 03-data-vinos.sql             # Datos de catálogo de vinos
+│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas
+│       └── 05-schema-users.sql           # Esquema y admin inicial de accesos
 ├── api-vinos/                         # API REST (Flask)
 │   ├── README.md
 │   ├── app.py
@@ -135,6 +141,7 @@ ABP/
 └── docs/                              # Documentación global
     ├── documentacion-bbdd-vinos.md
     ├── documentacion-bbdd-reservas.md
+    ├── documentacion-bbdd-usuarios.md
     ├── frontend-architecture.md
     └── git-ignore-explanations.md
 ```
@@ -153,6 +160,7 @@ ABP/
 | [docs/frontend-architecture.md](docs/frontend-architecture.md) | Arquitectura y estructura detallada del frontend |
 | [docs/documentacion-bbdd-vinos.md](docs/documentacion-bbdd-vinos.md) | Esquema detallado de `cataleg-vins` |
 | [docs/documentacion-bbdd-reservas.md](docs/documentacion-bbdd-reservas.md) | Esquema detallado de `reservas_lacanal` |
+| [docs/documentacion-bbdd-usuarios.md](docs/documentacion-bbdd-usuarios.md) | Esquema detallado de `usuarios-lacanal` |
 | [docs/git-ignore-explanations.md](docs/git-ignore-explanations.md) | Explicación de reglas del `.gitignore` |
 
 ---
@@ -186,3 +194,4 @@ ABP/
 
 > [!WARNING]
 > No subir al repositorio: `.venv/`, `node_modules/`, `__pycache__/`, archivos `.pyc`, `.env`, ni `dist/`. Revisa el [.gitignore](docs/git-ignore-explanations.md) para más detalles.
+
