@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM - Panel de Gestión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo La Canal" class="logo-img">
+        </div>
+        <div class="subtitle">Panel de Gestión y CRM</div>
+    </header>
+
+
+    <main class="dashboard-container">
+
+        <h2 class="section-title">Gestión de Reservas</h2>
+        <div class="grid">
+            <a href="#" class="card-btn">Crear reserva manual</a>
+            <a href="#" class="card-btn">Editar reserva</a>
+            <a href="#" class="card-btn">Cancelar reserva</a>
+        </div>
+
+        <h2 class="section-title">Bodega</h2>
+        <div class="grid">
+            <a href="#" class="card-btn">Gestionar Vinos Fuera de carta</a>
+        </div>
+
+        <h2 class="section-title">Inventario</h2>
+        <div class="grid">
+            <a href="#" class="card-btn">Ver inventario completo</a>
+            <a href="#" class="card-btn">Añadir producto</a>
+            <a href="#" class="card-btn">Editar stock</a>
+            <a href="#" class="card-btn">Eliminar producto</a>
+        </div>
+
+        <h2 class="section-title">Avisos del Sistema</h2>
+        <div class="grid">
+            <a href="#" class="card-btn alert">Alertas automáticas de poco stock</a>
+        </div>
+
+        <div class="logout-container">
+            <a href="/login" class="logout-link">Cerrar sesión (Salir al Login)</a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
