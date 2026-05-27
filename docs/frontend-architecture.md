@@ -83,43 +83,121 @@ El diseño visual está totalmente alineado con las *Directrices de Identidad de
 
 ---
 
-## 4. Estructura de Componentes Clave
+## 4. Estructura de Componentes y Páginas (Documentación Detallada)
 
-### A. `NavBar.jsx` (Barra de Navegación)
-* **Maquetación Dual:** Dispone de un menú de navegación horizontal para escritorios y un botón de hamburguesa con panel colapsable y doble borde flotante para dispositivos móviles.
-* **Scroll Inteligente de Retorno:** Incorpora un manejador de clic inteligente que detecta si el usuario ya se encuentra en la Home y realiza un desplazamiento suave (`behavior: "smooth"`) hacia el inicio (`top: 0`), mejorando la usabilidad.
+### A. Puntos de Entrada y Enrutamiento Raíz
 
-### B. `Hero.jsx` (Showcase de Bienvenida)
-Es un componente puramente responsivo estructurado en dos columnas de visualización:
-1. **Manifiesto (Izquierda):** Tarjeta con diseño de menú impreso físico, texto humanista y botón de reserva interactivo con efecto de relleno en hover.
-2. **Galería (Derecha):** Orquesta dos maquetas diferenciadas para pantallas grandes y móviles:
-   * **Desktop (`>= xl`):** Colaje asimétrico en tres dimensiones con solapamientos de capas (`z-index` del 10 al 25), coordenadas absolutas fijas y tipografía gigante flotando en la capa de fondo.
-   * **Móvil/Tablet (`< xl`):** Distribución simétrica en cuadrícula masonry, optimizando el área táctil y la nitidez de las fotos.
+#### 1. `main.jsx`
+* **Ubicación:** `front-end-vinos/src/main.jsx`
+* **Propósito:** Actúa como el punto de inicio de la ejecución en el cliente. Carga e inicializa el árbol virtual de componentes de React sobre el contenedor del DOM real `#root`.
+* **Configuración Clave:**
+  - Envuelve la aplicación `<App />` dentro de `<BrowserRouter>` de `react-router-dom` para habilitar el enrutamiento del lado del cliente (SPA) en todo el árbol de componentes.
+  - Utiliza `<StrictMode>` para activar advertencias y comprobaciones adicionales de desarrollo.
+  - Importa `index.css`, asegurando que el motor global de Tailwind y los tokens de diseño de la marca se apliquen antes de pintar cualquier elemento.
 
-### C. `ListaVinos.jsx` (Catálogo de Vinos)
-Componente central de la funcionalidad de vinos. Recibe `vinos`, `isLoading` y `error` como props desde `Celler.jsx`.
-* **Buscador Editorial:** Input de texto que filtra por nombre de vino, bodega y D.O. con coincidencia parcial case-insensitive.
-* **Filtros Rápidos por Tipo:** Botones generados dinámicamente a partir de los tipos únicos presentes en los datos (`useMemo` + `Set`).
-* **Agrupación Visual:** Los vinos filtrados se agrupan por `tipo_nombre` con cabeceras bilingües (catalán/castellano) y contador de vinos por categoría.
-* **Estados de UI:** Skeleton loader animado (carga), panel de error con doble borde (fallo de API), y estado vacío con botón de limpieza de filtros.
-* **Optimización:** Las tres fases de procesamiento (`filteredVinos`, `uniqueTypes`, `groupedVinos`) están memorizadas con `useMemo`.
+#### 2. `App.jsx`
+* **Ubicación:** `front-end-vinos/src/App.jsx`
+* **Propósito:** Definir el Layout global y actuar como el enrutador raíz del proyecto.
+* **Componentes y Rutas:**
+  - Renderiza persistentemente el encabezado `<NavBar />` en todas las vistas.
+  - Define el contenedor principal con clase `min-h-screen bg-canal-bg` que asegura el fondo caliza mate de pantalla completa.
+  - Utiliza `<Routes>` y `<Route>` para renderizar condicionalmente las páginas basadas en la URL del navegador:
+    - Ruta `/`: Renderiza el orquestador `<Index />`.
+    - Ruta `/celler`: Renderiza el orquestador `<Celler />`.
 
-> [!NOTE]
-> Para la documentación técnica completa del flujo de datos de la Lista de Vinos, consultar `docs/documentacion-lista-vinos.md`.
+---
 
-### D. `CardVino.jsx` (Tarjeta Editorial de Vino)
-Componente atómico que renderiza cada vino individual en un diseño editorial premium:
-* **Imagen por Tipo:** Mapea `tipo_nombre` a fotos editoriales de Unsplash (tinto, blanco, espumoso, rosado) con fallback por defecto.
-* **Jerarquía Tipográfica:** Bodega (Sans Humanista), Nombre del vino (Serif Romana), D.O. (Serif Cursiva itálica).
-* **Ficha Técnica:** Muestra añada, formato/capacidad y copa recomendada (condicional) en un bloque con separadores sutiles.
-* **Micro-animaciones:** Hover con elevación (`translateY -4px`), sombra expandida y zoom suave de la imagen (scale 1.05 en 1.5s).
+### B. Componentes Modulares de la Interfaz
 
-### E. `HeroImageCard.jsx` (Tarjetas de Mosaico)
-Componente modular atómico que envuelve cada imagen del collage:
-* Aplica el doble borde de forma configurable.
-* Cuenta con **posicionamiento interno por insets absolutos (`absolute inset-[6px]`)** que anula errores de colapso de altura circular en navegadores móviles bajo propiedades de `aspect-ratio` y anchos de porcentaje.
-* Gestiona etiquetas flotantes interactivas en itálica descriptiva que emergen con transiciones de opacidad en hover.
-* Configura propiedades de prioridad de red en la carga de imágenes (`fetchpriority="high"` en la imagen de portada LCP para optimizar el SEO y la métrica Core Web Vitals, y `low` en las complementarias).
+#### 3. `NavBar.jsx` (Barra de Navegación)
+* **Ubicación:** `front-end-vinos/src/components/NavBar.jsx`
+* **Propósito:** Proporcionar la cabecera superior interactiva y global de la aplicación.
+* **Características Clave:**
+  - **Diseño Simétrico:** Menú de tres columnas en escritorio (enlaces a la izquierda, logotipo "La Canal" centrado en Serif Romana, enlaces y CTA de reserva a la derecha).
+  - **Menú Móvil Responsive:** En pantallas pequeñas, colapsa en un botón de hamburguesa animado con un panel desplegable envuelto en un contenedor de doble borde físico (`.double-border-frame`).
+  - **Estado Local (`isOpen`):** Booleano que controla la transición de apertura/cierre del panel móvil.
+  - **Scroll Inteligente de Retorno:** Al hacer clic en el logotipo central desde la ruta Home (`/`), desplaza de forma fluida el scroll de la ventana al inicio superior (`top: 0`, `behavior: "smooth"`).
+  - **Manejador de Reservas (`handleReservationClick`):** Cierra el panel en móvil y lanza el flujo de reservas de mesa (temporalmente implementado con un diálogo de alerta nativo).
+
+#### 4. `Hero.jsx` (Showcase de Bienvenida)
+* **Ubicación:** `front-end-vinos/src/components/Hero.jsx`
+* **Propósito:** Presentar la sección de bienvenida de la página principal transmitiendo la filosofía de cocina de origen y producto.
+* **Características Clave:**
+  - **Manifiesto Tipográfico (Izquierda):** Tarjeta con diseño de menú impreso físico (`.double-border-frame`) y botón de reserva interactivo con efecto de relleno en hover.
+  - **Tipografía Gigante 3D:** Cadena "La Canal" translúcida en la capa de fondo (`opacity-[0.04]`, `text-[9vw]`), proporcionando profundidad estética tridimensional.
+  - **Mosaico Asimétrico Solapado (Derecha):** Orquesta dos disposiciones responsivas:
+    - **Escritorio (`>= xl`):** Collage 3D solapado con tres tarjetas de imágenes flotantes con animación sutil de flotación (`animate-soft-float` y `animate-soft-float-delayed`).
+    - **Móvil/Tablet (`< xl`):** Cuadrícula simétrica en masonry vertical para optimizar la navegación táctil.
+
+#### 5. `HeroImageCard.jsx` (Tarjetas de Mosaico)
+* **Ubicación:** `front-end-vinos/src/components/HeroImageCard.jsx`
+* **Propósito:** Componente de enmarcado atómico y optimización de rendimiento para las imágenes de comida del Hero.
+* **Propiedades (Props):**
+  - `src` (string, obligatoria): Ruta o URL del recurso de la imagen.
+  - `alt` (string, obligatoria): Texto alternativo para accesibilidad y SEO.
+  - `label` (string, opcional): Texto de la etiqueta interactiva en cursiva Serif que emerge sobre la imagen.
+  - `className` (string, opcional): Clases de Tailwind de posicionamiento absoluto.
+  - `fetchPriority` (string, opcional): Define la prioridad de carga en red (`high` o `low`).
+* **Detalles Técnicos:**
+  - Implementa un marco concéntrico de doble línea fina enmarcada (`padding: 6px` entre dos bordes).
+  - **Posicionamiento Inset:** Emplea la propiedad `absolute inset-[6px]` sobre la imagen interior para evitar el colapso de altura en navegadores móviles cuando se trabaja con proporciones de `aspect-ratio` y anchos dinámicos por porcentaje.
+  - Configura la métrica Core Web Vitals optimizando la imagen principal LCP del Hero (`fetchPriority="high"` en la imagen de carrilleras y `low` en las secundarias).
+
+#### 6. `ListaVinos.jsx` (Motor del Catálogo de Vinos)
+* **Ubicación:** `front-end-vinos/src/components/ListaVinos.jsx`
+* **Propósito:** Gestionar de forma inteligente y reactiva el catálogo completo de vinos en el cliente.
+* **Propiedades (Props):**
+  - `vinos` (`Array<Object>`): Array con el catálogo crudo recuperado de la base de datos a través de la API.
+  - `isLoading` (`boolean`): Bandera de carga activa.
+  - `error` (`Object | null`): Objeto de error en caso de fallo en la llamada HTTP.
+* **Estados Locales (`useState`):**
+  - `searchQuery` (`string`): Cadena de texto para la barra de búsqueda en tiempo real.
+  - `selectedType` (`string`): Categoría de vino seleccionada en el menú rápido (Tinto, Blanco, Espumoso, Rosado, o "all").
+* **Procesamiento de Datos en 3 Fases Memorizadas (`useMemo`):**
+  1. **Filtrado (`filteredVinos`):** Filtra en paralelo combinando por operador AND la búsqueda de texto libre (case-insensitive sobre `vino_nombre`, `bodega_nombre` y `zona_origen`) y la coincidencia normalizada de categoría.
+  2. **Categorías Únicas (`uniqueTypes`):** Extrae de forma dinámica las categorías presentes en la lista original de vinos utilizando un `Set` y las devuelve ordenadas para renderizar los botones de filtrado rápido.
+  3. **Agrupación y Ordenación (`groupedVinos`):** Agrupa los vinos filtrados en un mapa de categorías y los ordena alfabéticamente por nombre de vino utilizando `localeCompare`.
+* **Estados de la Interfaz:**
+  - **Skeleton Loader (Cargando):** Si `isLoading` es true, pinta 3 tarjetas fantasma animadas con la clase `animate-pulse`.
+  - **Error Panel:** Si `error` existe, muestra una advertencia de conexión elegante con el diseño `.double-border-frame`.
+  - **Empty State:** Si tras el filtrado no quedan vinos, renderiza un mensaje con un botón de limpieza para restablecer los estados de búsqueda.
+
+#### 7. `CardVino.jsx` (Tarjeta Editorial de Vino)
+* **Ubicación:** `front-end-vinos/src/components/CardVino.jsx`
+* **Propósito:** Mostrar de forma visual e impresa la información técnica de un vino específico.
+* **Propiedades (Props):**
+  - `vino` (`Object`): Datos individuales de un vino procedente del mapeo en la lista.
+* **Características Clave:**
+  - **Imagen Editorial Dinámica:** Mapea el tipo de vino (`tipo_nombre` en minúsculas) a imágenes estáticas premium de Unsplash (`tinto`, `blanco`, `espumoso`, `rosado`), con una imagen de bodegón genérica de respaldo.
+  - **Jerarquía Visual Clara:** Bodega en Sans Humanista con alta tracking, Nombre del vino en Serif Romana de gran peso visual, Denominación de origen en cursiva Serif itálica.
+  - **Ficha de Cosecha y Servicio:** Muestra la añada, capacidad formateada y, si existe en la base de datos, el tipo de copa recomendado para el servicio del sumiller.
+  - **Micro-animaciones:** Aplica transiciones suaves en hover (elevación vertical en `translateY(-4px)` y efecto zoom de la imagen interior a `scale(1.05)` en 1.5s).
+
+---
+
+### C. Páginas y Controladores de Vistas
+
+#### 8. `index.jsx` (Página de Inicio)
+* **Ubicación:** `front-end-vinos/src/pages/index.jsx`
+* **Propósito:** Actuar como orquestador y contenedor de la Landing Page principal del restaurante.
+* **Funcionamiento:** Renderiza de forma modular la sección `<Hero />` y se encuentra estructurada para incorporar futuras secciones como Carta, Menús o Filosofía de manera secuencial.
+
+#### 9. `Celler.jsx` (Página de la Bodega)
+* **Ubicación:** `front-end-vinos/src/pages/Celler.jsx`
+* **Propósito:** Orquestar la vista de El Celler, gestionar la llamada HTTP y el control de resiliencia del frontend.
+* **Comportamiento y Ciclo de Vida (`useEffect`):**
+  - **Scroll Top Inicial:** Asegura que la pantalla comience inmediatamente en el pixel 0 al navegar a esta ruta.
+  - **Consumo de la API con Fallback:**
+    - Realiza un `fetch` asíncrono hacia el endpoint `http://127.0.0.1:5000/vinos`.
+    - **Control de Latencia (AbortController):** Integra un temporizador de 3 segundos (`setTimeout`) que aborta de forma activa la petición de red si el backend excede este tiempo, previniendo pantallas bloqueadas en conexiones lentas.
+    - **Capa de Resiliencia (Fallback):** En caso de fallo de red o timeout, captura el error de forma silenciosa (`setError(null)` y registra una advertencia en la consola), manteniendo una experiencia de usuario limpia mediante la omisión de mensajes de error de sistema agresivos.
+  - **Navegación:** Integra un enlace de retorno de estilo editorial (`← Tornar a l'inici / Volver al inicio`) hacia la Home (`/`).
+
+#### 10. `App.css` (Boilerplate de Vite)
+* **Ubicación:** `front-end-vinos/src/App.css`
+* **Propósito:** Este archivo contiene las clases y estilos por defecto generados al inicializar la aplicación con Vite (como `.counter`, `.hero`, `#center`, etc.).
+* **Detalle Técnico:** Actualmente **no está siendo utilizado** por ningún componente del catálogo de vinos, ya que el proyecto utiliza una maquetación e identidad visual propia descrita exclusivamente en `index.css`. Se conserva por motivos de compatibilidad de la plantilla base.
+
 
 ---
 
