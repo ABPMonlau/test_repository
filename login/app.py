@@ -2,16 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import hashlib
 
+# NUEVO: Importamos os y dotenv para leer el archivo .env
+import os
+from dotenv import load_dotenv
+
+# NUEVO: Le decimos a Python que cargue el archivo .env en memoria
+load_dotenv()
+
 app = Flask(__name__)
 
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS ---
 def get_db_connection():
+    # Ahora leemos las variables de entorno en lugar de usar texto plano
     return mysql.connector.connect(
-        host="172.17.34.40",
-        user="usersadmin",
-        password="1234",  # ¡Recuerda poner aquí tu contraseña real de MySQL!
-        database="usuarios-lacanal",
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
     )
 
 
