@@ -52,7 +52,7 @@ CREATE TABLE vinos (
     vino_desc VARCHAR(255),
     copa_id INT,
     CONSTRAINT pk_vinos PRIMARY KEY (vino_id),
-    CONSTRAINT uq_vinos_nombre UNIQUE (vino_nombre),
+    CONSTRAINT uq_vinos_nombre_bodega UNIQUE (vino_nombre, bodega),
     -- Relaciones (Claves Foráneas)
     CONSTRAINT fk_vinos_tipos FOREIGN KEY (vino_tipo) REFERENCES tipos (tipo_id) ON DELETE SET NULL,
     CONSTRAINT fk_vinos_bodegas FOREIGN KEY (bodega) REFERENCES bodegas (bodega_id) ON DELETE SET NULL,
@@ -81,6 +81,7 @@ CREATE TABLE cosechas (
     vino_id INT,
     anio INT,
     CONSTRAINT pk_cosechas PRIMARY KEY (cosecha_id),
+    CONSTRAINT uq_vino_anio UNIQUE (vino_id, anio),
     -- Relaciones
     CONSTRAINT fk_cosechas_vinos FOREIGN KEY (vino_id) REFERENCES vinos (vino_id) ON DELETE CASCADE
 );
@@ -90,6 +91,7 @@ CREATE TABLE vinos_venta (
     cosecha_id INT,
     formato_id INT,
     CONSTRAINT pk_vinos_venta PRIMARY KEY (producto_id),
+    CONSTRAINT uq_cosecha_formato UNIQUE (cosecha_id, formato_id),
     -- Relaciones
     CONSTRAINT fk_vv_cosechas FOREIGN KEY (cosecha_id) REFERENCES cosechas (cosecha_id) ON DELETE CASCADE,
     CONSTRAINT fk_vv_formatos FOREIGN KEY (formato_id) REFERENCES formatos (formato_id) ON DELETE RESTRICT
