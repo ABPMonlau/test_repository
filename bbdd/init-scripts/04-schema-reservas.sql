@@ -1,5 +1,5 @@
 -- ==================================================
--- Script 04: Esquema y datos de reservas_lacanal
+-- Script 04 (Modificado): Esquema y datos de reservas_lacanal
 -- ==================================================
 
 USE `reservas_lacanal`;
@@ -7,26 +7,19 @@ USE `reservas_lacanal`;
 -- ==================================================
 -- BLOQUE 1: ELIMINACIÓN DE TABLAS Y DATOS
 -- ==================================================
--- Desactivamos temporalmente las restricciones para evitar conflictos de dependencias
 SET FOREIGN_KEY_CHECKS = 0;
 
--- Borramos primero la tabla intermedia/hija que contiene las llaves foráneas
 DROP TABLE IF EXISTS `reservas`;
-
--- Borramos las tablas padre
 DROP TABLE IF EXISTS `turnos`;
 DROP TABLE IF EXISTS `mesas`;
 DROP TABLE IF EXISTS `clientes`;
 
--- Volvemos a activar las restricciones para el proceso de creación e inserción
 SET FOREIGN_KEY_CHECKS = 1;
-
 
 -- ==================================================
 -- BLOQUE 2: CREACIÓN DE ESTRUCTURAS (TABLAS)
 -- ==================================================
 
--- 2.1. Estructura para la tabla `clientes`
 CREATE TABLE `clientes` (
     `id_cliente` int NOT NULL AUTO_INCREMENT,
     `nombre` varchar(100) NOT NULL,
@@ -36,7 +29,6 @@ CREATE TABLE `clientes` (
     PRIMARY KEY (`id_cliente`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
--- 2.2. Estructura para la tabla `turnos` (Se crea antes para que 'mesas' pueda referenciarla)
 CREATE TABLE `turnos` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `dia_semana` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
@@ -46,21 +38,17 @@ CREATE TABLE `turnos` (
     `maxima_reserva` INT NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
--- 2.3. Estructura para la tabla `mesas` (Con el campo id_turno añadido)
+-- Tabla mesas sin id_turno
 CREATE TABLE `mesas` (
     `id_mesa` int NOT NULL AUTO_INCREMENT,
     `numero_mesa` int NOT NULL,
     `capacidad` int NOT NULL,
     `ubicacion` varchar(50) DEFAULT 'Interior',
     `activa` tinyint(1) DEFAULT 1,
-    `id_turno` int DEFAULT NULL, 
     PRIMARY KEY (`id_mesa`),
-    UNIQUE KEY `numero_mesa` (`numero_mesa`),
-    KEY `id_turno` (`id_turno`),
-    CONSTRAINT `mesas_fk_turno` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE SET NULL
+    UNIQUE KEY `numero_mesa` (`numero_mesa`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
--- 2.4. Estructura para la tabla `reservas` (Se crea al final porque depende de las 3 anteriores)
 CREATE TABLE `reservas` (
     `id_reserva` int NOT NULL AUTO_INCREMENT,
     `id_cliente` int NOT NULL,
@@ -86,45 +74,33 @@ CREATE TABLE `reservas` (
     CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE RESTRICT 
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
-
 -- ==================================================
--- BLOQUE 3: INSERCIÓN DE DATOS (DUMPING DATA)
+-- BLOQUE 3: INSERCIÓN DE DATOS
 -- ==================================================
 
--- 3.1. Datos para la tabla `mesas` (Actualizados con valor NULL al final para el id_turno)
-INSERT INTO `mesas` VALUES 
-(1, 1, 4, 'Comedor', 1, NULL),
-(2, 2, 4, 'Comedor', 1, NULL),
-(3, 3, 4, 'Comedor', 1, NULL),
-(4, 4, 4, 'Comedor', 1, NULL),
-(5, 5, 4, 'Comedor', 1, NULL),
-(6, 6, 4, 'Comedor', 1, NULL),
-(7, 7, 4, 'Comedor', 1, NULL),
-(8, 8, 4, 'Comedor', 1, NULL),
-(9, 9, 2, 'Comedor', 1, NULL),
-(10, 101, 2, 'Comedor', 1, NULL),
-(11, 102, 2, 'Comedor', 1, NULL),
-(12, 103, 2, 'Comedor', 1, NULL);
+-- Inserción de mesas sin el campo id_turno
+INSERT INTO `mesas` (id_mesa, numero_mesa, capacidad, ubicacion, activa) VALUES 
+(1, 1, 4, 'Comedor', 1),
+(2, 2, 4, 'Comedor', 1),
+(3, 3, 4, 'Comedor', 1),
+(4, 4, 4, 'Comedor', 1),
+(5, 5, 4, 'Comedor', 1),
+(6, 6, 4, 'Comedor', 1),
+(7, 7, 4, 'Comedor', 1),
+(8, 8, 4, 'Comedor', 1),
+(9, 9, 2, 'Comedor', 1),
+(10, 101, 2, 'Comedor', 1),
+(11, 102, 2, 'Comedor', 1),
+(12, 103, 2, 'Comedor', 1);
 
--- 3.2. Datos para la tabla `turnos`
-INSERT INTO `turnos` (
-    dia_semana,
-    tipo_turno,
-    hora_comienzo,
-    hora_cierre,
-    maxima_reserva
-) VALUES
--- Wednesday
+-- Inserción de turnos (mantiene su estructura original)
+INSERT INTO `turnos` (dia_semana, tipo_turno, hora_comienzo, hora_cierre, maxima_reserva) VALUES
 ('Wednesday', 'comida', '13:00:00', '15:30:00', 30),
--- Thursday
 ('Thursday', 'comida', '13:00:00', '15:30:00', 30),
--- Friday
 ('Friday', 'comida', '13:00:00', '15:30:00', 30),
 ('Friday', 'noche',  '20:00:00', '22:00:00', 30),
--- Saturday
 ('Saturday', 'maniana', '08:00:00', '10:30:00', 30),
 ('Saturday', 'comida',  '13:00:00', '15:30:00', 30),
 ('Saturday', 'noche',   '20:00:00', '22:00:00', 30),
--- Sunday
 ('Sunday', 'maniana', '08:00:00', '10:30:00', 30),
 ('Sunday', 'comida',  '13:00:00', '15:30:00', 30);
