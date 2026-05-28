@@ -55,6 +55,21 @@ VALUES (1, 1, 4, 'Comedor', 1),
     (12, 103, 2, 'Comedor', 1);
 
 --
+-- Table structure for table `turnos` (MOVIDA ARRIBA)
+--
+
+DROP TABLE IF EXISTS `turnos`;
+
+CREATE TABLE `turnos` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `dia_semana` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+    `tipo_turno` ENUM('maniana', 'comida', 'noche') NOT NULL,
+    `hora_comienzo` TIME NOT NULL,
+    `hora_cierre` TIME NOT NULL,
+    `maxima_reserva` INT NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+--
 -- Table structure for table `reservas`
 --
 
@@ -64,8 +79,9 @@ CREATE TABLE `reservas` (
     `id_reserva` int NOT NULL AUTO_INCREMENT,
     `id_cliente` int NOT NULL,
     `id_mesa` int NOT NULL,
+    `id_turno` int NOT NULL, -- Nuevo campo para el enlace
     `fecha_reserva` date NOT NULL,
-    `hora_reserva` INT NOT NULL,
+    `hora_reserva` time NOT NULL, -- Cambiado de INT a TIME
     `cantidad_personas` int NOT NULL,
     `estado` enum(
         'Pendiente',
@@ -78,17 +94,8 @@ CREATE TABLE `reservas` (
     PRIMARY KEY (`id_reserva`),
     KEY `id_cliente` (`id_cliente`),
     KEY `id_mesa` (`id_mesa`),
+    KEY `id_turno` (`id_turno`), -- Índice para optimizar búsquedas por turno
     CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE,
-    CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE RESTRICT
+    CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE RESTRICT,
+    CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE RESTRICT -- Nueva clave foránea
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
-
-DROP TABLE IF EXISTS `turnos`;
-
-CREATE TABLE turnos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    dia_semana ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
-    tipo_turno ENUM('maniana', 'comida', 'noche') NOT NULL,
-    hora_comienzo TIME NOT NULL,
-    hora_cierre TIME NOT NULL,
-    maxima_reserva INT NOT NULL
-)
