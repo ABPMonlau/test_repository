@@ -60,55 +60,7 @@ CREATE TABLE `clientes` (
 
 ---
 
-### 2.2 Tabla `mesas`
-
-Representa las mesas físicas del restaurante. Cada mesa tiene un número identificativo único, una capacidad máxima de comensales y una ubicación dentro del local.
-
-| Columna       | Tipo          | Nulo   | Default       | Restricciones              | Descripción                              |
-|---------------|---------------|--------|---------------|----------------------------|------------------------------------------|
-| `id_mesa`     | `INT`         | NO     | AUTO_INCREMENT| **PRIMARY KEY**            | Identificador interno de la mesa         |
-| `numero_mesa` | `INT`         | NO     | —             | `NOT NULL`, **UNIQUE**     | Número visible de la mesa (ej: 1, 101)   |
-| `capacidad`   | `INT`         | NO     | —             | `NOT NULL`                 | Número máximo de comensales              |
-| `ubicacion`   | `VARCHAR(50)` | SÍ     | `'Interior'`  | —                          | Zona del restaurante (ej: Comedor)       |
-| `activa`      | `TINYINT(1)`  | SÍ     | `1`           | —                          | Si la mesa está activa (`1`) o no (`0`)  |
-
-```sql
-CREATE TABLE `mesas` (
-  `id_mesa` int NOT NULL AUTO_INCREMENT,
-  `numero_mesa` int NOT NULL,
-  `capacidad` int NOT NULL,
-  `ubicacion` varchar(50) DEFAULT 'Interior',
-  `activa` tinyint(1) DEFAULT 1,
-  PRIMARY KEY (`id_mesa`),
-  UNIQUE KEY `numero_mesa` (`numero_mesa`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-```
-
-#### Datos precargados
-
-El script de inicialización inserta **12 mesas** en el comedor:
-
-| id_mesa | numero_mesa | capacidad | ubicacion | activa |
-|:-------:|:-----------:|:---------:|-----------|:------:|
-| 1       | 1           | 4         | Comedor   | 1      |
-| 2       | 2           | 4         | Comedor   | 1      |
-| 3       | 3           | 4         | Comedor   | 1      |
-| 4       | 4           | 4         | Comedor   | 1      |
-| 5       | 5           | 4         | Comedor   | 1      |
-| 6       | 6           | 4         | Comedor   | 1      |
-| 7       | 7           | 4         | Comedor   | 1      |
-| 8       | 8           | 4         | Comedor   | 1      |
-| 9       | 9           | 2         | Comedor   | 1      |
-| 10      | 101         | 2         | Comedor   | 1      |
-| 11      | 102         | 2         | Comedor   | 1      |
-| 12      | 103         | 2         | Comedor   | 1      |
-
-> [!IMPORTANT]
-> Las mesas 1–8 tienen capacidad para **4 personas**, mientras que la mesa 9 y las mesas 101–103 tienen capacidad para **2 personas**. Esto es relevante a la hora de validar el campo `cantidad_personas` en las reservas.
-
----
-
-### 2.3 Tabla `turnos`
+### 2.2 Tabla `turnos`
 
 Almacena la configuración de turnos y franjas horarias del restaurante según el día de la semana. Define el cupo máximo de reservas permitidas por turno.
 
@@ -147,6 +99,58 @@ El script de inicialización inserta **9 turnos** en el restaurante:
 | 7 | Saturday | noche | 20:00:00 | 22:00:00 | 30 |
 | 8 | Sunday | maniana | 08:00:00 | 10:30:00 | 30 |
 | 9 | Sunday | comida | 13:00:00 | 15:30:00 | 30 |
+
+---
+
+### 2.3 Tabla `mesas`
+
+Representa las mesas físicas del restaurante. Cada mesa tiene un número identificativo único, una capacidad máxima de comensales, una ubicación dentro del local y, opcionalmente, un turno asignado.
+
+| Columna       | Tipo          | Nulo   | Default       | Restricciones              | Descripción                              |
+|---------------|---------------|--------|---------------|----------------------------|------------------------------------------|
+| `id_mesa`     | `INT`         | NO     | AUTO_INCREMENT| **PRIMARY KEY**            | Identificador interno de la mesa         |
+| `numero_mesa` | `INT`         | NO     | —             | `NOT NULL`, **UNIQUE**     | Número visible de la mesa (ej: 1, 101)   |
+| `capacidad`   | `INT`         | NO     | —             | `NOT NULL`                 | Número máximo de comensales              |
+| `ubicacion`   | `VARCHAR(50)` | SÍ     | `'Interior'`  | —                          | Zona del restaurante (ej: Comedor)       |
+| `activa`      | `TINYINT(1)`  | SÍ     | `1`           | —                          | Si la mesa está activa (`1`) o no (`0`)  |
+| `id_turno`    | `INT`         | SÍ     | `NULL`        | **FK → turnos**            | Turno opcional asociado a la mesa         |
+
+```sql
+CREATE TABLE `mesas` (
+    `id_mesa` int NOT NULL AUTO_INCREMENT,
+    `numero_mesa` int NOT NULL,
+    `capacidad` int NOT NULL,
+    `ubicacion` varchar(50) DEFAULT 'Interior',
+    `activa` tinyint(1) DEFAULT 1,
+    `id_turno` int DEFAULT NULL, 
+    PRIMARY KEY (`id_mesa`),
+    UNIQUE KEY `numero_mesa` (`numero_mesa`),
+    KEY `id_turno` (`id_turno`),
+    CONSTRAINT `mesas_fk_turno` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE SET NULL
+) ENGINE = InnoDB AUTO_INCREMENT = 13 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+```
+
+#### Datos precargados
+
+El script de inicialización inserta **12 mesas** en el comedor, con el campo `id_turno` inicializado en `NULL`:
+
+| id_mesa | numero_mesa | capacidad | ubicacion | activa | id_turno |
+|:-------:|:-----------:|:---------:|-----------|:------:|:--------:|
+| 1       | 1           | 4         | Comedor   | 1      | NULL     |
+| 2       | 2           | 4         | Comedor   | 1      | NULL     |
+| 3       | 3           | 4         | Comedor   | 1      | NULL     |
+| 4       | 4           | 4         | Comedor   | 1      | NULL     |
+| 5       | 5           | 4         | Comedor   | 1      | NULL     |
+| 6       | 6           | 4         | Comedor   | 1      | NULL     |
+| 7       | 7           | 4         | Comedor   | 1      | NULL     |
+| 8       | 8           | 4         | Comedor   | 1      | NULL     |
+| 9       | 9           | 2         | Comedor   | 1      | NULL     |
+| 10      | 101         | 2         | Comedor   | 1      | NULL     |
+| 11      | 102         | 2         | Comedor   | 1      | NULL     |
+| 12      | 103         | 2         | Comedor   | 1      | NULL     |
+
+> [!IMPORTANT]
+> Las mesas 1–8 tienen capacidad para **4 personas**, mientras que la mesa 9 y las mesas 101–103 tienen capacidad para **2 personas**. Esto es relevante a la hora de validar el campo `cantidad_personas` en las reservas.
 
 ---
 
@@ -198,19 +202,21 @@ CREATE TABLE `reservas` (
 
 ## 3. Relaciones entre Tablas
 
-El esquema define tres relaciones de clave foránea, todas partiendo de la tabla `reservas`:
+El esquema define cuatro relaciones de clave foránea, estructurando las dependencias de la siguiente forma:
 
 | Relación                          | Tipo    | Columna FK     | Referencia               | Regla ON DELETE | Motivo                                                                                          |
 |-----------------------------------|---------|----------------|---------------------------|-----------------|-------------------------------------------------------------------------------------------------|
 | `reservas` → `clientes`          | N:1     | `id_cliente`   | `clientes(id_cliente)`    | **CASCADE**     | Si se elimina un cliente, sus reservas dejan de tener sentido y se borran automáticamente.       |
 | `reservas` → `mesas`             | N:1     | `id_mesa`      | `mesas(id_mesa)`          | **RESTRICT**    | No se puede eliminar una mesa si tiene reservas asociadas, para proteger la integridad de datos. |
 | `reservas` → `turnos`            | N:1     | `id_turno`     | `turnos(id)`              | **RESTRICT**    | No se puede eliminar un turno si hay reservas programadas en él, protegiendo la coherencia de datos. |
+| `mesas` → `turnos`               | N:1     | `id_turno`     | `turnos(id)`              | **SET NULL**    | Permite vincular opcionalmente una mesa a un turno específico. Si se borra el turno, la mesa permanece activa. |
 
 ### Descripción textual
 
 - **Un cliente puede tener muchas reservas** (relación 1:N). Si el cliente se elimina de la base de datos, todas sus reservas asociadas se eliminan en cascada.
 - **Una mesa puede estar asociada a muchas reservas** (relación 1:N). Sin embargo, no se permite eliminar una mesa que tenga reservas vinculadas; primero deben cancelarse o eliminarse las reservas.
 - **Un turno puede estar asignado a múltiples reservas** (relación 1:N), permitiendo llevar el control de aforo por franja horaria.
+- **Una mesa puede tener un turno asignado de forma opcional** (relación N:1). Si el turno es eliminado, la mesa pierde esa asociación estableciendo el campo a `NULL`.
 - **Cada reserva pertenece exactamente a un cliente, a una mesa y a un turno**.
 
 ---
@@ -233,6 +239,7 @@ erDiagram
         INT capacidad "NOT NULL"
         VARCHAR ubicacion "DEFAULT Interior"
         TINYINT activa "DEFAULT 1"
+        INT id_turno FK "DEFAULT NULL"
     }
 
     TURNOS {
@@ -260,6 +267,7 @@ erDiagram
     CLIENTES ||--o{ RESERVAS : "tiene"
     MESAS ||--o{ RESERVAS : "recibe"
     TURNOS ||--o{ RESERVAS : "se asigna en"
+    TURNOS ||--o{ MESAS : "se asocia a"
 ```
 
 ---
@@ -424,6 +432,12 @@ Permite desactivar una mesa temporalmente (por mantenimiento, reforma, evento pr
 ### 6.6 `ON DELETE RESTRICT` en la relación `reservas → turnos`
 
 Se ha establecido la restricción `RESTRICT` para evitar la eliminación accidental de un turno en la base de datos mientras existan reservas activas programadas en esa franja. Esto evita la aparición de registros de reservas sin una definición horaria o de capacidad válida.
+
+### 6.7 Asociación opcional de mesas a turnos (`id_turno` en `mesas`)
+
+Se incorporó la relación opcional entre mesas y turnos mediante la columna `id_turno` con regla de integridad `ON DELETE SET NULL`. Esto permite al restaurante:
+- **Asignación fija o de disponibilidad**: Reservar o bloquear mesas específicas exclusivamente para ciertos turnos (por ejemplo, turnos nocturnos o de fin de semana).
+- **Desvinculación segura**: Si se elimina el turno de la base de datos, la mesa se desvincula de forma automática sin afectar su existencia u operatividad general en otros turnos, evitando pérdida de datos operacionales críticos sobre los recursos físicos.
 
 ---
 
