@@ -1,15 +1,21 @@
+# (Tus importaciones arriba...)
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import hashlib
-
-# NUEVO: Importamos os y dotenv para leer el archivo .env
 import os
 from dotenv import load_dotenv
 
-# NUEVO: Le decimos a Python que cargue el archivo .env en memoria
-load_dotenv()
+# Importamos el archivo que acabamos de crear
+from vinos import vinos_bp
 
+load_dotenv()
 app = Flask(__name__)
+# NUEVO: Necesario para que funcionen los mensajes flash
+app.secret_key = "clave_super_secreta_para_la_canal"
+# REGISTRAMOS EL BLUEPRINT (Conectamos los dos archivos)
+app.register_blueprint(vinos_bp)
+
+# ... (El resto de tu código get_db_connection, login, register, etc. sigue igual)
 
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS ---
