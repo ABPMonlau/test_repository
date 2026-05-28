@@ -14,22 +14,16 @@ export default function NavBar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-canal-bg/90 backdrop-blur-md border-b border-canal-border/20 transition-all duration-300">
+    <header className="sticky top-0 z-50 bg-canal-alt/90 backdrop-blur-md border-b border-canal-border/20 transition-all duration-300">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between lg:grid lg:grid-cols-3">
         {/* Lado Izquierdo: Enlaces (Escritorio) */}
         <nav className="hidden lg:flex items-center gap-8 justify-start">
-          <a
-            href="/#carta"
-            className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
-          >
-            La Carta
-          </a>
-          <a
-            href="/#menus"
+          <Link
+            to="/menus"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Menús
-          </a>
+          </Link>
           <Link
             to="/celler"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
@@ -107,7 +101,7 @@ export default function NavBar() {
       {/* Menú Desplegable Móvil */}
       <div
         className={`lg:hidden transition-all duration-500 ease-in-out border-b border-canal-border/20 overflow-hidden ${
-          isOpen ? "max-h-screen opacity-100 bg-canal-bg" : "max-h-0 opacity-0"
+          isOpen ? "max-h-screen opacity-100 bg-canal-alt" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-6 py-8 flex flex-col items-center">
@@ -121,13 +115,13 @@ export default function NavBar() {
               >
                 La Carta
               </a>
-              <a
-                href="/#menus"
+              <Link
+                to="/menus"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Menús
-              </a>
+              </Link>
               <Link
                 to="/celler"
                 onClick={() => setIsOpen(false)}

@@ -3,8 +3,9 @@
 Este proyecto contiene una base de datos MariaDB unificada que aloja tres esquemas en un único contenedor Docker:
 
 - **`cataleg-vins`** — Catálogo de vinos (tipos, bodegas, uvas, formatos, cosechas)
-- **`reservas_lacanal`** — Sistema de reservas (clientes, mesas, reservas)
+- **`reservas_lacanal`** — Sistema de reservas (clientes, mesas, turnos, reservas)
 - **`usuarios-lacanal`** — Control de acceso y usuarios del panel de administración (users)
+- **`menus-lacanal`** — Catálogo de menús estructurados del restaurante (menus, secciones, platos)
 
 ## Requisitos Previos
 
@@ -17,15 +18,16 @@ Este proyecto contiene una base de datos MariaDB unificada que aloja tres esquem
 bbdd/
 ├── docker-compose.yaml              # Archivo unificado para levantar el contenedor
 ├── init-scripts/                     # Scripts de inicialización (orden alfabético)
-│   ├── 01-databases-y-usuarios.sql   # Crea las 3 BD y sus respectivos usuarios
+│   ├── 01-databases-y-usuarios.sql   # Crea las 4 BD y sus respectivos usuarios
 │   ├── 02-schema-vinos.sql           # Esquema de tablas de cataleg-vins
 │   ├── 03-data-vinos.sql             # Datos iniciales de cataleg-vins
-│   ├── 04-schema-reservas.sql        # Esquema y datos de reservas_lacanal
-│   └── 05-schema-users.sql           # Esquema y datos por defecto de usuarios-lacanal
+│   ├── 04-schema-reservas.sql        # Esquema y datos de reservas_lacanal (incluye turnos)
+│   ├── 05-schema-users.sql           # Esquema y datos por defecto de usuarios-lacanal
+│   └── 06-schema-menus.sql           # Esquema y datos por defecto de menus-lacanal
 └── instrucciones.md                  # Esta guía de uso y levantamiento
 ```
 
-> **Nota:** Los scripts dentro de `init-scripts/` se ejecutan en orden alfabético al crear el contenedor por primera vez. Por eso están numerados secuencialmente del `01-` al `05-`.
+> **Nota:** Los scripts dentro de `init-scripts/` se ejecutan en orden alfabético al crear el contenedor por primera vez. Por eso están numerados secuencialmente del `01-` al `06-`.
 
 ## Pasos para el levantamiento desde cero
 
@@ -59,13 +61,13 @@ Deberías ver un contenedor llamado `db-la-canal` en estado "Up".
 
 #### Credenciales
 
-| Parámetro       | Usuario root             | Usuario vinosadmin       | Usuario reservasadmin         | Usuario usersadmin            |
-|-----------------|--------------------------|--------------------------|-------------------------------|-------------------------------|
-| **Host**        | `localhost`              | `localhost`              | `localhost`                   | `localhost`                   |
-| **Puerto**      | `3306`                   | `3306`                   | `3306`                        | `3306`                        |
-| **Usuario**     | `root`                   | `vinosadmin`             | `reservasadmin`               | `usersadmin`                  |
-| **Contraseña**  | `la-canal-admin`         | `1234`                   | `1234`                        | `1234`                        |
-| **Acceso a**    | Todas las bases de datos | Solo `cataleg-vins`      | Solo `reservas_lacanal`       | Solo `usuarios-lacanal`       |
+| Parámetro       | Usuario root             | Usuario vinosadmin       | Usuario reservasadmin         | Usuario usersadmin            | Usuario menusadmin            |
+|-----------------|--------------------------|--------------------------|-------------------------------|-------------------------------|-------------------------------|
+| **Host**        | `localhost`              | `localhost`              | `localhost`                   | `localhost`                   | `localhost`                   |
+| **Puerto**      | `3306`                   | `3306`                   | `3306`                        | `3306`                        | `3306`                        |
+| **Usuario**     | `root`                   | `vinosadmin`             | `reservasadmin`               | `usersadmin`                  | `menusadmin`                  |
+| **Contraseña**  | `la-canal-admin`         | `1234`                   | `1234`                        | `1234`                        | `1234`                        |
+| **Acceso a**    | Todas las bases de datos | Solo `cataleg-vins`      | Solo `reservas_lacanal`       | Solo `usuarios-lacanal`       | Solo `menus-lacanal`          |
 
 #### Acceso vía terminal (CLI) como root
 
@@ -81,6 +83,8 @@ USE `cataleg-vins`;
 USE `reservas_lacanal`;
 -- o
 USE `usuarios-lacanal`;
+-- o
+USE `menus-lacanal`;
 ```
 
 #### Acceso como vinosadmin (solo vinos)
@@ -101,6 +105,12 @@ mariadb -h localhost -P 3306 -u reservasadmin -p1234 reservas_lacanal
 mariadb -h localhost -P 3306 -u usersadmin -p1234 usuarios-lacanal
 ```
 
+#### Acceso como menusadmin (solo menús)
+
+```bash
+mariadb -h localhost -P 3306 -u menusadmin -p1234 menus-lacanal
+```
+
 #### Acceso dentro del contenedor
 
 ```bash
@@ -109,12 +119,13 @@ docker exec -it db-la-canal mariadb -u root -pla-canal-admin
 
 ## Usuarios y Permisos
 
-| Usuario         | Contraseña       | Permisos                                           |
+| Usuario | Contraseña | Permisos |
 |-----------------|------------------|-----------------------------------------------------|
-| `root`          | `la-canal-admin` | Superusuario — acceso total a todo el servidor      |
-| `vinosadmin`    | `1234`           | Todos los privilegios solo sobre `cataleg-vins`     |
-| `reservasadmin` | `1234`           | Todos los privilegios solo sobre `reservas_lacanal` |
-| `usersadmin`    | `1234`           | Todos los privilegios solo sobre `usuarios-lacanal` |
+| `root` | `la-canal-admin` | Superusuario — acceso total a todo el servidor |
+| `vinosadmin` | `1234` | Todos los privilegios solo sobre `cataleg-vins` |
+| `reservasadmin` | `1234` | Todos los privilegios solo sobre `reservas_lacanal` |
+| `usersadmin` | `1234` | Todos los privilegios solo sobre `usuarios-lacanal` |
+| `menusadmin` | `1234` | Todos los privilegios solo sobre `menus-lacanal` |
 
 ## Mantenimiento y Limpieza
 

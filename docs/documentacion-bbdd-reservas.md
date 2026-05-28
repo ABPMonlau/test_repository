@@ -1,9 +1,9 @@
 # Documentación del Esquema: Base de Datos `reservas_lacanal`
 
-Este documento describe en detalle el esquema de la base de datos `reservas_lacanal`, que gestiona el sistema de reservas del restaurante **La Canal**. El esquema permite registrar clientes, administrar las mesas del establecimiento y gestionar las reservas asociándolas a un cliente y una mesa concretos.
+Este documento describe en detalle el esquema de la base de datos `reservas_lacanal`, que gestiona el sistema de reservas del restaurante **La Canal**. El esquema permite registrar clientes, administrar las mesas del establecimiento, configurar los turnos semanales y gestionar las reservas vinculando todos estos elementos de manera coherente.
 
 > [!NOTE]
-> El script SQL de inicialización se encuentra en [`bbdd/init-scripts/04-schema-reservas.sql`](file:///Users/heernaa/Desktop/ABP/bbdd/init-scripts/04-schema-reservas.sql). Este script se ejecuta automáticamente al levantar el contenedor Docker.
+> El script SQL de inicialización se encuentra en [`bbdd/init-scripts/04-schema-reservas.sql`](file:///Users/heernaa/Desktop/ABP%20(LACANAL)/test_repository/bbdd/init-scripts/04-schema-reservas.sql). Este script se ejecuta automáticamente al levantar el contenedor Docker.
 
 ---
 
@@ -13,11 +13,12 @@ Este documento describe en detalle el esquema de la base de datos `reservas_laca
 2. [Detalle de Tablas](#2-detalle-de-tablas)
    - [2.1 Tabla `clientes`](#21-tabla-clientes)
    - [2.2 Tabla `mesas`](#22-tabla-mesas)
-   - [2.3 Tabla `reservas`](#23-tabla-reservas)
+   - [2.3 Tabla `turnos`](#23-tabla-turnos)
+   - [2.4 Tabla `reservas`](#24-tabla-reservas)
 3. [Relaciones entre Tablas](#3-relaciones-entre-tablas)
-4. [Diagrama Entidad-Relación](#4-diagrama-entidad-relación)
+4. [Diagrama Entidad-Relación](#4-diagrama-entidad-relaci%C3%B3n)
 5. [Consultas de Ejemplo](#5-consultas-de-ejemplo)
-6. [Decisiones de Diseño](#6-decisiones-de-diseño)
+6. [Decisiones de Diseño](#6-decisiones-de-dise%C3%B1o)
 
 ---
 
@@ -27,7 +28,8 @@ Este documento describe en detalle el esquema de la base de datos `reservas_laca
 |-------------|--------------------------------------------------------|:-----------:|:-----------------:|
 | `clientes`  | Registro de clientes que realizan reservas             | 5           | No                |
 | `mesas`     | Catálogo de mesas físicas del restaurante              | 5           | Sí (12 mesas)     |
-| `reservas`  | Registro de reservas vinculadas a un cliente y una mesa| 9           | No                |
+| `turnos`    | Configuración de turnos por día de la semana y horarios| 6           | Sí (9 turnos)     |
+| `reservas`  | Registro de reservas vinculadas a cliente, mesa y turno| 10          | No                |
 
 ---
 
@@ -106,17 +108,60 @@ El script de inicialización inserta **12 mesas** en el comedor:
 
 ---
 
-### 2.3 Tabla `reservas`
+### 2.3 Tabla `turnos`
 
-Tabla central del sistema. Cada registro vincula un **cliente** con una **mesa** en una fecha y hora determinadas, registrando el estado de la reserva y posibles notas especiales.
+Almacena la configuración de turnos y franjas horarias del restaurante según el día de la semana. Define el cupo máximo de reservas permitidas por turno.
+
+| Columna | Tipo | Nulo | Default | Restricciones | Descripción |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `id` | `INT` | NO | AUTO_INCREMENT | **PRIMARY KEY** | Identificador único del turno |
+| `dia_semana` | `ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')` | NO | — | `NOT NULL` | Día de la semana en inglés |
+| `tipo_turno` | `ENUM('maniana', 'comida', 'noche')` | NO | — | `NOT NULL` | Bloque horario del turno |
+| `hora_comienzo` | `TIME` | NO | — | `NOT NULL` | Hora de apertura del turno |
+| `hora_cierre` | `TIME` | NO | — | `NOT NULL` | Hora de cierre del turno |
+| `maxima_reserva` | `INT` | NO | — | `NOT NULL` | Cantidad máxima de comensales/reservas por turno |
+
+```sql
+CREATE TABLE `turnos` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `dia_semana` ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+    `tipo_turno` ENUM('maniana', 'comida', 'noche') NOT NULL,
+    `hora_comienzo` TIME NOT NULL,
+    `hora_cierre` TIME NOT NULL,
+    `maxima_reserva` INT NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+```
+
+#### Datos precargados
+
+El script de inicialización inserta **9 turnos** en el restaurante:
+
+| id | dia_semana | tipo_turno | hora_comienzo | hora_cierre | maxima_reserva |
+| :---: | :--- | :--- | :---: | :---: | :---: |
+| 1 | Wednesday | comida | 13:00:00 | 15:30:00 | 30 |
+| 2 | Thursday | comida | 13:00:00 | 15:30:00 | 30 |
+| 3 | Friday | comida | 13:00:00 | 15:30:00 | 30 |
+| 4 | Friday | noche | 20:00:00 | 22:00:00 | 30 |
+| 5 | Saturday | maniana | 08:00:00 | 10:30:00 | 30 |
+| 6 | Saturday | comida | 13:00:00 | 15:30:00 | 30 |
+| 7 | Saturday | noche | 20:00:00 | 22:00:00 | 30 |
+| 8 | Sunday | maniana | 08:00:00 | 10:30:00 | 30 |
+| 9 | Sunday | comida | 13:00:00 | 15:30:00 | 30 |
+
+---
+
+### 2.4 Tabla `reservas`
+
+Tabla central del sistema. Cada registro vincula un **cliente**, una **mesa** y un **turno** en una fecha determinada, registrando la hora de llegada exacta, el estado y posibles notas especiales.
 
 | Columna             | Tipo                                                      | Nulo   | Default             | Restricciones                 | Descripción                              |
 |---------------------|-----------------------------------------------------------|--------|----------------------|-------------------------------|------------------------------------------|
 | `id_reserva`        | `INT`                                                     | NO     | AUTO_INCREMENT       | **PRIMARY KEY**               | Identificador único de la reserva        |
 | `id_cliente`        | `INT`                                                     | NO     | —                    | `NOT NULL`, **FK → clientes** | Cliente que realiza la reserva           |
 | `id_mesa`           | `INT`                                                     | NO     | —                    | `NOT NULL`, **FK → mesas**    | Mesa asignada a la reserva               |
+| `id_turno`          | `INT`                                                     | NO     | —                    | `NOT NULL`, **FK → turnos**   | Turno asignado a la reserva              |
 | `fecha_reserva`     | `DATE`                                                    | NO     | —                    | `NOT NULL`                    | Fecha de la reserva                      |
-| `hora_reserva`      | `INT`                                                     | NO     | —                    | `NOT NULL`                    | Hora/Turno de la reserva (formato entero)|
+| `hora_reserva`      | `TIME`                                                    | NO     | —                    | `NOT NULL`                    | Hora específica de llegada del cliente    |
 | `cantidad_personas` | `INT`                                                     | NO     | —                    | `NOT NULL`                    | Número de comensales                     |
 | `estado`            | `ENUM('Pendiente','Confirmada','Cancelada','Completada')` | SÍ     | `'Pendiente'`        | —                             | Estado actual de la reserva              |
 | `notas_especiales`  | `TEXT`                                                     | SÍ     | `NULL`               | —                             | Comentarios o peticiones del cliente     |
@@ -124,39 +169,49 @@ Tabla central del sistema. Cada registro vincula un **cliente** con una **mesa**
 
 ```sql
 CREATE TABLE `reservas` (
-  `id_reserva` int NOT NULL AUTO_INCREMENT,
-  `id_cliente` int NOT NULL,
-  `id_mesa` int NOT NULL,
-  `fecha_reserva` date NOT NULL,
-  `hora_reserva` int NOT NULL,
-  `cantidad_personas` int NOT NULL,
-  `estado` enum('Pendiente','Confirmada','Cancelada','Completada') DEFAULT 'Pendiente',
-  `notas_especiales` text,
-  `fecha_creacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_reserva`),
-  KEY `id_cliente` (`id_cliente`),
-  KEY `id_mesa` (`id_mesa`),
-  CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE,
-  CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    `id_reserva` int NOT NULL AUTO_INCREMENT,
+    `id_cliente` int NOT NULL,
+    `id_mesa` int NOT NULL,
+    `id_turno` int NOT NULL, 
+    `fecha_reserva` date NOT NULL,
+    `hora_reserva` time NOT NULL, 
+    `cantidad_personas` int NOT NULL,
+    `estado` enum(
+        'Pendiente',
+        'Confirmada',
+        'Cancelada',
+        'Completada'
+    ) DEFAULT 'Pendiente',
+    `notas_especiales` text,
+    `fecha_creacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id_reserva`),
+    KEY `id_cliente` (`id_cliente`),
+    KEY `id_mesa` (`id_mesa`),
+    KEY `id_turno` (`id_turno`), 
+    CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE,
+    CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE RESTRICT,
+    CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE RESTRICT 
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 ```
 
 ---
 
 ## 3. Relaciones entre Tablas
 
-El esquema define dos relaciones de clave foránea, ambas partiendo de la tabla `reservas`:
+El esquema define tres relaciones de clave foránea, todas partiendo de la tabla `reservas`:
 
 | Relación                          | Tipo    | Columna FK     | Referencia               | Regla ON DELETE | Motivo                                                                                          |
 |-----------------------------------|---------|----------------|---------------------------|-----------------|-------------------------------------------------------------------------------------------------|
 | `reservas` → `clientes`          | N:1     | `id_cliente`   | `clientes(id_cliente)`    | **CASCADE**     | Si se elimina un cliente, sus reservas dejan de tener sentido y se borran automáticamente.       |
 | `reservas` → `mesas`             | N:1     | `id_mesa`      | `mesas(id_mesa)`          | **RESTRICT**    | No se puede eliminar una mesa si tiene reservas asociadas, para proteger la integridad de datos. |
+| `reservas` → `turnos`            | N:1     | `id_turno`     | `turnos(id)`              | **RESTRICT**    | No se puede eliminar un turno si hay reservas programadas en él, protegiendo la coherencia de datos. |
 
 ### Descripción textual
 
 - **Un cliente puede tener muchas reservas** (relación 1:N). Si el cliente se elimina de la base de datos, todas sus reservas asociadas se eliminan en cascada.
 - **Una mesa puede estar asociada a muchas reservas** (relación 1:N). Sin embargo, no se permite eliminar una mesa que tenga reservas vinculadas; primero deben cancelarse o eliminarse las reservas.
-- **Cada reserva pertenece exactamente a un cliente y a una mesa**.
+- **Un turno puede estar asignado a múltiples reservas** (relación 1:N), permitiendo llevar el control de aforo por franja horaria.
+- **Cada reserva pertenece exactamente a un cliente, a una mesa y a un turno**.
 
 ---
 
@@ -180,10 +235,20 @@ erDiagram
         TINYINT activa "DEFAULT 1"
     }
 
+    TURNOS {
+        INT id PK "AUTO_INCREMENT"
+        ENUM dia_semana "NOT NULL"
+        ENUM tipo_turno "NOT NULL"
+        TIME hora_comienzo "NOT NULL"
+        TIME hora_cierre "NOT NULL"
+        INT maxima_reserva "NOT NULL"
+    }
+
     RESERVAS {
         INT id_reserva PK "AUTO_INCREMENT"
         INT id_cliente FK "NOT NULL"
         INT id_mesa FK "NOT NULL"
+        INT id_turno FK "NOT NULL"
         DATE fecha_reserva "NOT NULL"
         TIME hora_reserva "NOT NULL"
         INT cantidad_personas "NOT NULL"
@@ -194,13 +259,14 @@ erDiagram
 
     CLIENTES ||--o{ RESERVAS : "tiene"
     MESAS ||--o{ RESERVAS : "recibe"
+    TURNOS ||--o{ RESERVAS : "se asigna en"
 ```
 
 ---
 
 ## 5. Consultas de Ejemplo
 
-### 5.1 Consultar todas las reservas con datos del cliente y la mesa
+### 5.1 Consultar todas las reservas con datos del cliente, la mesa y el turno
 
 ```sql
 SELECT
@@ -209,6 +275,7 @@ SELECT
     c.telefono,
     m.numero_mesa,
     m.ubicacion,
+    t.tipo_turno,
     r.fecha_reserva,
     r.hora_reserva,
     r.cantidad_personas,
@@ -216,6 +283,7 @@ SELECT
 FROM reservas r
 INNER JOIN clientes c ON r.id_cliente = c.id_cliente
 INNER JOIN mesas m    ON r.id_mesa    = m.id_mesa
+INNER JOIN turnos t   ON r.id_turno   = t.id
 ORDER BY r.fecha_reserva, r.hora_reserva;
 ```
 
@@ -226,17 +294,19 @@ SELECT
     r.id_reserva,
     c.nombre       AS cliente,
     m.numero_mesa,
+    t.tipo_turno,
     r.hora_reserva,
     r.cantidad_personas
 FROM reservas r
 INNER JOIN clientes c ON r.id_cliente = c.id_cliente
 INNER JOIN mesas m    ON r.id_mesa    = m.id_mesa
+INNER JOIN turnos t   ON r.id_turno   = t.id
 WHERE r.fecha_reserva = '2026-05-21'
   AND r.estado = 'Pendiente'
 ORDER BY r.hora_reserva;
 ```
 
-### 5.3 Consultar mesas disponibles (activas y sin reserva en un horario)
+### 5.3 Consultar mesas disponibles (activas y sin reserva en un turno y horario)
 
 ```sql
 SELECT m.numero_mesa, m.capacidad, m.ubicacion
@@ -246,7 +316,7 @@ WHERE m.activa = 1
       SELECT r.id_mesa
       FROM reservas r
       WHERE r.fecha_reserva = '2026-05-21'
-        AND r.hora_reserva = '21:00:00'
+        AND r.id_turno = 4
         AND r.estado IN ('Pendiente', 'Confirmada')
   )
 ORDER BY m.capacidad DESC;
@@ -259,13 +329,14 @@ ORDER BY m.capacidad DESC;
 INSERT INTO clientes (nombre, telefono, email)
 VALUES ('María García López', '612345678', 'maria.garcia@email.com');
 
--- Paso 2: Crear la reserva usando el id del cliente recién insertado
-INSERT INTO reservas (id_cliente, id_mesa, fecha_reserva, hora_reserva, cantidad_personas, notas_especiales)
+-- Paso 2: Crear la reserva usando el id del cliente recién insertado, asociando mesa y turno
+INSERT INTO reservas (id_cliente, id_mesa, id_turno, fecha_reserva, hora_reserva, cantidad_personas, notas_especiales)
 VALUES (
     LAST_INSERT_ID(),  -- id_cliente del paso anterior
     3,                 -- mesa número 3 (id_mesa = 3)
+    4,                 -- id_turno = 4 (Viernes noche)
     '2026-05-25',      -- fecha de la reserva
-    '20:30:00',        -- hora de la reserva
+    '20:30:00',        -- hora de la reserva (formato TIME)
     4,                 -- número de comensales
     'Celebración de cumpleaños, necesitan velas'
 );
@@ -296,10 +367,12 @@ SELECT
     r.fecha_reserva,
     r.hora_reserva,
     m.numero_mesa,
+    t.tipo_turno,
     r.cantidad_personas,
     r.estado
 FROM reservas r
 INNER JOIN mesas m ON r.id_mesa = m.id_mesa
+INNER JOIN turnos t ON r.id_turno = t.id
 WHERE r.id_cliente = 1
 ORDER BY r.fecha_reserva DESC, r.hora_reserva DESC;
 ```
@@ -337,17 +410,20 @@ Se utiliza un `ENUM('Pendiente','Confirmada','Cancelada','Completada')` en lugar
 
 Para este proyecto, los cuatro estados cubren el ciclo de vida completo de una reserva y no se prevé que cambien con frecuencia, por lo que `ENUM` es la opción más práctica.
 
-### 6.4 Separación `fecha_reserva` / `hora_reserva` (Uso de `INT` para horas/turnos)
+### 6.4 Gestión de horarios estructurada (Uso de tabla `turnos` y tipo `TIME` para hora_reserva)
 
-Se optó por campos separados `DATE` y `INT` en lugar de un solo `DATETIME` o tipo `TIME` para facilitar:
-- **Indexación por turnos/slots:** Representar la hora de servicio mediante enteros (por ejemplo, identificadores de turnos como `1` para almuerzo, `2` para cena; o bien horas representadas de forma simple como minutos transcurridos o slots de servicio).
-- **Simplificación del modelo en React:** Aliviar al frontend de parsear tipos `TIME` complejos de SQL, facilitando comparaciones directas de turnos de reserva con operaciones enteras básicas.
-- **Consultas eficientes:** Búsquedas optimizadas por rango de fecha y slots de turnos sin conversiones de zona horaria o de formato temporal en el motor de base de datos.
-
+Se descartó el diseño inicial de representar los turnos únicamente con un entero directo en la tabla de reservas. En su lugar, se implementó una aproximación mucho más robusta:
+- **Tabla `turnos` dedicada**: Centraliza los horarios de comienzo y cierre, los días de la semana operativos y el aforo/capacidad máxima de reservas por turno. Esto permite al restaurante modificar dinámicamente sus políticas horarias sin alterar el código ni la estructura de las reservas.
+- **Campo `hora_reserva` como `TIME`**: Almacena la hora real de llegada acordada con el cliente (ej. `20:30:00` en lugar de una etiqueta genérica). Esto proporciona una excelente precisión horaria para la cocina y recepción de sala.
+- **Clave Foránea a `turnos`**: Garantiza la integridad referencial y permite cruzar fácilmente el estado del aforo en tiempo real.
 
 ### 6.5 Campo `activa` en `mesas`
 
 Permite desactivar una mesa temporalmente (por mantenimiento, reforma, evento privado) sin eliminarla de la base de datos, preservando el historial de reservas anteriores vinculadas a esa mesa.
+
+### 6.6 `ON DELETE RESTRICT` en la relación `reservas → turnos`
+
+Se ha establecido la restricción `RESTRICT` para evitar la eliminación accidental de un turno en la base de datos mientras existan reservas activas programadas en esa franja. Esto evita la aparición de registros de reservas sin una definición horaria o de capacidad válida.
 
 ---
 

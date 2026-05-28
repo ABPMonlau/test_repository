@@ -17,6 +17,8 @@ CREATE DATABASE IF NOT EXISTS `reservas_lacanal` DEFAULT CHARACTER SET utf8mb4 C
 
 CREATE DATABASE IF NOT EXISTS `usuarios-lacanal` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
+CREATE DATABASE IF NOT EXISTS `menus-lacanal` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 -- --------------------------
 -- Usuario: reservasadmin
 -- Permisos solo sobre reservas_lacanal
@@ -41,5 +43,9 @@ GRANT ALL PRIVILEGES ON `cataleg-vins`.* TO 'vinosadmin' @'%';
 CREATE USER IF NOT EXISTS 'usersadmin' @'%' IDENTIFIED BY '1234';
 
 GRANT ALL PRIVILEGES ON `usuarios-lacanal`.* TO 'usersadmin' @'%';
+
+CREATE USER IF NOT EXISTS 'menusadmin' @'%' IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON `menus-lacanal`.* TO 'menusadmin' @'%';
 
 FLUSH PRIVILEGES;
