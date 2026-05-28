@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import {useEffect} from "react";
+import {Link} from "react-router-dom";
 import CardMenu from "../components/CardMenu";
 
 // Datos de los 3 menús del restaurante transcritos de forma impecable de las fichas originales
@@ -14,30 +14,30 @@ const MENUS_DATA = [
       {
         name: "Primers",
         items: [
-          { name: "Amanida Waldorf" },
-          { name: "Salmorejo" },
-          { name: "Pasta amb gambes a l'all" },
-          { name: "Zamburinyes amb salsa d'estragó", supplement: "supl. 8€" }
-        ]
+          {name: "Amanida Waldorf"},
+          {name: "Salmorejo"},
+          {name: "Pasta amb gambes a l'all"},
+          {name: "Zamburinyes amb salsa d'estragó", supplement: "supl. 8€"},
+        ],
       },
       {
         name: "Segons",
         items: [
-          { name: "Arròs de sípia" },
-          { name: "Peix del dia amb salsa Nantua" },
-          { name: "Llom de porc amb anisats i salsa tàrtara" },
-          { name: "Filet de vedella", supplement: "supl. 14€" }
-        ]
+          {name: "Arròs de sípia"},
+          {name: "Peix del dia amb salsa Nantua"},
+          {name: "Llom de porc amb anisats i salsa tàrtara"},
+          {name: "Filet de vedella", supplement: "supl. 14€"},
+        ],
       },
       {
         name: "Postres",
         items: [
-          { name: "Maduixes amb infusió de temporada" },
-          { name: "Cremós de iogurt amb concasse de fruita" },
-          { name: "Lemon pie deconstruït" }
-        ]
-      }
-    ]
+          {name: "Maduixes amb infusió de temporada"},
+          {name: "Cremós de iogurt amb concasse de fruita"},
+          {name: "Lemon pie deconstruït"},
+        ],
+      },
+    ],
   },
   {
     id: "cap-de-setmana",
@@ -50,30 +50,43 @@ const MENUS_DATA = [
       {
         name: "Snacks",
         items: [
-          { name: "Bunyol de formatge", description: "mel i llimona fermentada" },
-          { name: "Xurro amb espuma de pesto i horseradish" },
-          { name: "Snack de paté de pollastre", description: "amb quicos i blat de moro" },
-          { name: "Crema d'anguila fumada", description: "gamba blanca amb oli dels seus caps, gel de cirera i consomé, xiitake i kombu" },
-          { name: "Foie micuit", description: "amb coulis d'aglà, praliné d'avellanes i torradetes de brioix", supplement: "supl. 10€" }
-        ]
+          {name: "Bunyol de formatge", description: "mel i llimona fermentada"},
+          {name: "Xurro amb espuma de pesto i horseradish"},
+          {
+            name: "Snack de paté de pollastre",
+            description: "amb quicos i blat de moro",
+          },
+          {
+            name: "Crema d'anguila fumada",
+            description:
+              "gamba blanca amb oli dels seus caps, gel de cirera i consomé, xiitake i kombu",
+          },
+          {
+            name: "Foie micuit",
+            description:
+              "amb coulis d'aglà, praliné d'avellanes i torradetes de brioix",
+            supplement: "supl. 10€",
+          },
+        ],
       },
       {
         name: "Segons a escollir",
         items: [
-          { name: "Peix del dia amb Gazpachuelo" },
-          { isSeparator: true },
-          { name: "Terrina de caça i porc", description: "amb textures de remolatxa" }
-        ]
+          {name: "Peix del dia amb Gazpachuelo"},
+          {
+            name: "Terrina de caça i porc",
+            description: "amb textures de remolatxa",
+          },
+        ],
       },
       {
         name: "Postres a escollir",
         items: [
-          { name: "Textures de maduixa, vainilla i estragó" },
-          { isSeparator: true },
-          { name: "Xocolata i ametlla" }
-        ]
-      }
-    ]
+          {name: "Textures de maduixa, vainilla i estragó"},
+          {name: "Xocolata i ametlla"},
+        ],
+      },
+    ],
   },
   {
     id: "interludi",
@@ -86,37 +99,56 @@ const MENUS_DATA = [
       {
         name: "Snacks",
         items: [
-          { name: "Bunyol de formatge", description: "mel i mandarina fermentada" },
-          { name: "Xurro amb espuma de pesto i horseradish" },
-          { name: "Snack de paté de pollastre", description: "amb quicos i blat de moro" },
-          { name: "Crema d'anguila fumada", description: "gamba blanca amb oli dels seus caps, gel de cirera i consomé, xiitake i kombu" },
-          { name: "Plat de verdures de temporada" },
-          { name: "Foie micuit", description: "amb coulis d'aglà, praliné d'avellanes i torradetes de brioix", supplement: "supl. 10€" }
-        ]
+          {
+            name: "Bunyol de formatge",
+            description: "mel i mandarina fermentada",
+          },
+          {name: "Xurro amb espuma de pesto i horseradish"},
+          {
+            name: "Snack de paté de pollastre",
+            description: "amb quicos i blat de moro",
+          },
+          {
+            name: "Crema d'anguila fumada",
+            description:
+              "gamba blanca amb oli dels seus caps, gel de cirera i consomé, xiitake i kombu",
+          },
+          {name: "Plat de verdures de temporada"},
+          {
+            name: "Foie micuit",
+            description:
+              "amb coulis d'aglà, praliné d'avellanes i torradetes de brioix",
+            supplement: "supl. 10€",
+          },
+        ],
       },
       {
         name: "Segons a escollir",
         items: [
-          { name: "Peix del dia amb Gazpachuelo" },
-          { isSeparator: true },
-          { name: "Terrina de caça i porc", description: "amb textures de remolatxa" }
-        ]
+          {name: "Peix del dia amb Gazpachuelo"},
+          {
+            name: "Terrina de caça i porc",
+            description: "amb textures de remolatxa",
+          },
+        ],
       },
       {
         name: "Postres a escollir",
         items: [
-          { name: "Textures de maduixa, vainilla i estragó" },
-          { isSeparator: true },
-          { name: "Xocolata i ametlla", extraNote: "Inclou els nostres petit fours" }
-        ]
-      }
-    ]
-  }
+          {name: "Textures de maduixa, vainilla i estragó"},
+          {
+            name: "Xocolata i ametlla",
+            extraNote: "Inclou els nostres petit fours",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default function Menus() {
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({top: 0, behavior: "instant"});
   }, []);
 
   return (
@@ -154,18 +186,20 @@ export default function Menus() {
             </h1>
             <div className="w-16 h-px bg-canal-border/60 my-2"></div>
             <p className="font-serif-italic italic text-base md:text-lg text-canal-secondary leading-relaxed max-w-lg">
-              "Cuina honesta, de gust, producte i temporalitat... una cuina sense presses."
+              "Cuina honesta, de gust, producte i temporalitat... una cuina
+              sense presses."
             </p>
           </div>
         </div>
       </section>
 
       {/* --- SECCIÓN DE CARTAS DE MENÚ --- */}
-      <main className="grow w-full max-w-[1200px] mx-auto px-6 pb-24 z-10 relative">
+      <main className="grow w-full max-w-300 mx-auto px-6 pb-12 z-10 relative">
         {/* Leyenda de uso para el usuario */}
         <div className="w-full flex justify-center mb-8">
           <span className="font-serif-italic italic text-xs text-canal-secondary opacity-80 animate-pulse text-center">
-            * Clica sobre qualsevol dels menús per desplegar els seus plats / Haz clic para desplegar cada menú
+            * Clica sobre qualsevol dels menús per desplegar els seus plats /
+            Haz clic para desplegar cada menú
           </span>
         </div>
 
