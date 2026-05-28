@@ -32,11 +32,15 @@ Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo
 │  └───────────────────┘  │
 │  ┌───────────────────┐  │
 │  │  reservas_lacanal │  │
-│  │  (3 tablas)       │  │
+│  │  (4 tablas)       │  │
 │  └───────────────────┘  │
 │  ┌───────────────────┐  │
 │  │  usuarios-lacanal │  │
 │  │  (1 tabla)        │  │
+│  └───────────────────┘  │
+│  ┌───────────────────┐  │
+│  │  menus-lacanal    │  │
+│  │  (3 tablas)       │  │
 │  └───────────────────┘  │
 └─────────────────────────┘
 ```
@@ -47,7 +51,7 @@ Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo
 
 | Componente | Tecnología | Puerto | Descripción |
 |------------|-----------|--------|-------------|
-| **bbdd** | MariaDB (Docker) | 3306 | Base de datos unificada con tres esquemas |
+| **bbdd** | MariaDB (Docker) | 3306 | Base de datos unificada con cuatro esquemas |
 | **api-vinos** | Python 3 + Flask | 5000 | API REST para el catálogo de vinos |
 | **front-end-vinos** | React 19 + Vite 8 | 5173 | Interfaz web del catálogo |
 
@@ -111,6 +115,7 @@ La aplicación estará disponible en `http://localhost:5173`
 | `vinosadmin` | `1234` | Solo `cataleg-vins` |
 | `reservasadmin` | `1234` | Solo `reservas_lacanal` |
 | `usersadmin` | `1234` | Solo `usuarios-lacanal` |
+| `menusadmin` | `1234` | Solo `menus-lacanal` |
 
 ---
 
@@ -123,11 +128,12 @@ test_repository/
 │   ├── docker-compose.yaml
 │   ├── instrucciones.md
 │   └── init-scripts/
-│       ├── 01-databases-y-usuarios.sql   # Crea las 3 BD y usuarios
+│       ├── 01-databases-y-usuarios.sql   # Crea las 4 BD y usuarios
 │       ├── 02-schema-vinos.sql           # Esquema de la BD de vinos
 │       ├── 03-data-vinos.sql             # Datos de catálogo de vinos
-│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas
-│       └── 05-schema-users.sql           # Esquema y admin inicial de accesos
+│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas (con turnos)
+│       ├── 05-schema-users.sql           # Esquema y admin inicial de accesos
+│       └── 06-schema-menus.sql           # Esquema y datos de menus
 ├── api-vinos/                         # API REST (Flask)
 │   ├── README.md
 │   ├── app.py
@@ -142,6 +148,7 @@ test_repository/
     ├── documentacion-bbdd-vinos.md
     ├── documentacion-bbdd-reservas.md
     ├── documentacion-bbdd-usuarios.md
+    ├── documentacion-bbdd-menus.md
     ├── frontend-architecture.md
     └── git-ignore-explanations.md
 ```
@@ -161,6 +168,7 @@ test_repository/
 | [docs/documentacion-bbdd-vinos.md](docs/documentacion-bbdd-vinos.md) | Esquema detallado de `cataleg-vins` |
 | [docs/documentacion-bbdd-reservas.md](docs/documentacion-bbdd-reservas.md) | Esquema detallado de `reservas_lacanal` |
 | [docs/documentacion-bbdd-usuarios.md](docs/documentacion-bbdd-usuarios.md) | Esquema detallado de `usuarios-lacanal` |
+| [docs/documentacion-bbdd-menus.md](docs/documentacion-bbdd-menus.md) | Esquema detallado de `menus-lacanal` |
 | [docs/git-ignore-explanations.md](docs/git-ignore-explanations.md) | Explicación de reglas del `.gitignore` |
 
 ---

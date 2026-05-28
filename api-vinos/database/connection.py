@@ -1,14 +1,12 @@
 import os
 import pymysql
 
-def get_connection():
+def get_connection_wine():
     """
     Abre una conexión con la base de datos MySQL/MariaDB.
     Esta función se reutiliza en las rutas que necesitan consultar
     o modificar datos.
     """
-
-
 
     connection_wine = pymysql.connect(
         host="172.17.34.40",
@@ -19,6 +17,17 @@ def get_connection():
         cursorclass=pymysql.cursors.DictCursor,
     )
 
+    return connection_wine
+
+
+
+def get_connection_menu():
+    """
+    Abre una conexión con la base de datos MySQL/MariaDB.
+    Esta función se reutiliza en las rutas que necesitan consultar
+    o modificar datos.
+    """
+
     connection_menu = pymysql.connect(
         host="172.17.34.40",
         port=3306,
@@ -28,4 +37,5 @@ def get_connection():
         cursorclass=pymysql.cursors.DictCursor,
     )
 
-    return [connection_wine, connection_menu]
+    return connection_menu
+

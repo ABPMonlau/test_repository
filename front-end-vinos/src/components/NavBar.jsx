@@ -18,12 +18,6 @@ export default function NavBar() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between lg:grid lg:grid-cols-3">
         {/* Lado Izquierdo: Enlaces (Escritorio) */}
         <nav className="hidden lg:flex items-center gap-8 justify-start">
-          <a
-            href="/#carta"
-            className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
-          >
-            La Carta
-          </a>
           <Link
             to="/menus"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"

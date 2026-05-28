@@ -38,8 +38,8 @@ Base de datos del catálogo de vinos del restaurante La Canal. Almacena toda la 
 | Columna | Tipo | Restricciones | Descripción |
 |---------|------|---------------|-------------|
 | `bodega_id` | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único |
-| `bodega_nombre` | VARCHAR(50) | NOT NULL | Nombre de la bodega |
-| `bodega_zona` | VARCHAR(50) | — | Zona geográfica principal de la bodega |
+| `bodega_nombre` | VARCHAR(100) | NOT NULL | Nombre de la bodega |
+| `bodega_zona` | VARCHAR(100) | — | Zona geográfica principal de la bodega |
 
 ---
 
@@ -67,12 +67,15 @@ Base de datos del catálogo de vinos del restaurante La Canal. Almacena toda la 
 | Columna | Tipo | Restricciones | Descripción |
 |---------|------|---------------|-------------|
 | `vino_id` | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único |
-| `vino_nombre` | VARCHAR(50) | NOT NULL, UNIQUE | Nombre del vino |
+| `vino_nombre` | VARCHAR(150) | NOT NULL | Nombre del vino |
 | `vino_tipo` | INT | FK → `tipos(tipo_id)` ON DELETE SET NULL | Tipo de vino |
-| `zona_origen` | VARCHAR(50) | — | Denominación de origen |
+| `zona_origen` | VARCHAR(100) | — | Denominación de origen |
 | `bodega` | INT | FK → `bodegas(bodega_id)` ON DELETE SET NULL | Bodega productora |
 | `vino_desc` | VARCHAR(255) | — | Descripción del vino |
 | `copa_id` | INT | FK → `copas(copa_id)` ON DELETE SET NULL | Copa recomendada |
+
+> [!NOTE]
+> Posee una restricción de unicidad compuesta `uq_vinos_nombre_bodega` sobre `(vino_nombre, bodega)` para evitar repetir el mismo vino de la misma bodega, permitiendo que bodegas diferentes tengan vinos con el mismo nombre.
 
 > [!NOTE]
 > Las claves foráneas usan `ON DELETE SET NULL` para que, si se elimina un tipo, bodega o copa, el vino no se pierda — solo se desvincula del registro eliminado.
