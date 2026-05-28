@@ -8,12 +8,24 @@ def get_connection():
     o modificar datos.
     """
 
-    connection = pymysql.connect(
+
+
+    connection_wine = pymysql.connect(
         host="172.17.34.40",
         port=3306,
         user="vinosadmin",
         password="1234",
         database="cataleg-vins",
+        cursorclass=pymysql.cursors.DictCursor,
     )
 
-    return connection
+    connection_menu = pymysql.connect(
+        host="172.17.34.40",
+        port=3306,
+        user="menusadmin",
+        password="1234",
+        database="menus-lacanal",
+        cursorclass=pymysql.cursors.DictCursor,
+    )
+
+    return [connection_wine, connection_menu]
