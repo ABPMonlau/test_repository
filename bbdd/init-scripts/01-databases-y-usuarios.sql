@@ -44,11 +44,8 @@ CREATE USER IF NOT EXISTS 'usersadmin' @'%' IDENTIFIED BY '1234';
 
 GRANT ALL PRIVILEGES ON `usuarios-lacanal`.* TO 'usersadmin' @'%';
 
-
-
-
 CREATE USER IF NOT EXISTS 'menusadmin' @'%' IDENTIFIED BY '1234';
 
-GRANT ALL PRIVILEGES ON `menus-lacanal`.* TO 'manusadmin' @'%';
+GRANT ALL PRIVILEGES ON `menus-lacanal`.* TO 'menusadmin' @'%';
 
 FLUSH PRIVILEGES;
