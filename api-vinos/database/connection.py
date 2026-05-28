@@ -7,12 +7,22 @@ def get_connection():
     Esta función se reutiliza en las rutas que necesitan consultar
     o modificar datos.
     """
-    connection = pymysql.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        port=int(os.environ.get("DB_PORT", 3306)),
-        user=os.environ.get("DB_USER", "vinosadmin"),
-        password=os.environ.get("DB_PASSWORD", "1234"),
-        database=os.environ.get("DB_NAME", "cataleg-vins"),
+    connection_wine = pymysql.connect(
+        host="172.17.34.40",
+        port=3306,
+        user="vinosadmin",
+        password="1234",
+        database="cataleg-vins",
         cursorclass=pymysql.cursors.DictCursor,
     )
-    return connection
+
+    connection_menu = pymysql.connect(
+        host="172.17.34.40",
+        port=3306,
+        user="menusadmin",
+        password="1234",
+        database="menus-lacanal",
+        cursorclass=pymysql.cursors.DictCursor,
+    )
+
+    return [connection_wine, connection_menu]
