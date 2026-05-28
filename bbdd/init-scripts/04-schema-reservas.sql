@@ -66,6 +66,8 @@ CREATE TABLE `reservas` (
     `notas_especiales` text,
     `fecha_creacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_reserva`),
+    -- Esta es la línea que evita duplicados en el mismo turno:
+    UNIQUE KEY `unique_mesa_turno_fecha` (`id_mesa`, `id_turno`, `fecha_reserva`),
     KEY `id_cliente` (`id_cliente`),
     KEY `id_mesa` (`id_mesa`),
     KEY `id_turno` (`id_turno`), 
