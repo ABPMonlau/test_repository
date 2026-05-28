@@ -53,8 +53,8 @@ CREATE TABLE `tipos` (
 
 CREATE TABLE `bodegas` (
     `bodega_id` INT AUTO_INCREMENT,
-    `bodega_nombre` VARCHAR(50) NOT NULL,
-    `bodega_zona` VARCHAR(50), 
+    `bodega_nombre` VARCHAR(100) NOT NULL, -- Ampliado a 100
+    `bodega_zona` VARCHAR(100),            -- Ampliado a 100
     CONSTRAINT `pk_bodegas` PRIMARY KEY (`bodega_id`)
 );
 
@@ -78,9 +78,9 @@ CREATE TABLE `copas` (
 
 CREATE TABLE `vinos` (
     `vino_id` INT AUTO_INCREMENT,
-    `vino_nombre` VARCHAR(50) NOT NULL,
+    `vino_nombre` VARCHAR(150) NOT NULL,  -- CORREGIDO: Ampliado de 50 a 150 para evitar el Error 1406
     `vino_tipo` INT,
-    `zona_origen` VARCHAR(50), 
+    `zona_origen` VARCHAR(100),           -- Ampliado a 100
     `bodega` INT,
     `vino_desc` VARCHAR(255),
     `copa_id` INT,
