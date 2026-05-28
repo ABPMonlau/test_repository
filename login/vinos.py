@@ -1,13 +1,18 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 import mysql.connector
-from mysql.connector import pooling  # IMPORTANTE: La herramienta de Pooling
+from mysql.connector import pooling
 import os
+
+# --- LA MAGIA ESTÁ AQUÍ: Cargar el .env ANTES de conectar ---
+from dotenv import load_dotenv
+
+load_dotenv()
+# ------------------------------------------------------------
 
 vinos_bp = Blueprint("vinos", __name__)
 
 # --- CONFIGURACIÓN DEL POOL DE CONEXIONES ---
-# Creamos la piscina fuera de las funciones para que sea global y permanente.
-# Esto mantiene 5 conexiones abiertas y listas, evitando los micro-cortes de red.
+# Ahora cuando Python lee os.getenv(), ya tiene las contraseñas y la IP listas
 db_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="piscina_vinos",
     pool_size=5,
@@ -28,7 +33,7 @@ def get_vinos_db():
 @vinos_bp.route("/vinos")
 def lista_vinos():
     db = get_vinos_db()
-    # buffered=True evita que la conexión se caiga mientras lee datos de la Raspberry
+    # buffered=True evita que la conexión se caiga mientras lee datos
     cursor = db.cursor(dictionary=True, buffered=True)
 
     try:
@@ -44,7 +49,7 @@ def lista_vinos():
         return render_template("vinos_lista.html", vinos=vinos)
 
     finally:
-        # SIEMPRE devuelve el "libro" a la biblioteca (la conexión a la piscina)
+        # SIEMPRE devuelve la conexión a la piscina
         cursor.close()
         db.close()
 
@@ -60,7 +65,6 @@ def nuevo_vino():
             nombre = request.form["vino_nombre"]
 
             # Si el desplegable viene vacío (""), lo convertimos a None (NULL en la BD)
-            # Esto evita que MariaDB colapse al intentar meter texto en un INT
             tipo_id = request.form["vino_tipo"] or None
             bodega_id = request.form["bodega"] or None
 
