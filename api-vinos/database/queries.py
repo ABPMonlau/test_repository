@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from database.connection import get_connection
+from database.connection import get_connection_wine
 
 # Cargamos todas las queries desde el fichero JSON una sola vez al importar el módulo.
 # Path(__file__) apunta a este mismo archivo (queries.py), así que .parent
@@ -16,7 +16,8 @@ def get_all_vinos():
     cosecha, formato y copa) usando la query definida en querys.json.
     Devuelve una lista de diccionarios, uno por cada fila.
     """
-    connection = get_connection()
+
+    connection = get_connection_wine()
     cursor = connection.cursor()
     cursor.execute(_QUERIES["get_vinos"])
     data = cursor.fetchall()

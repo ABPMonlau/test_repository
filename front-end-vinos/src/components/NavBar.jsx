@@ -14,22 +14,16 @@ export default function NavBar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-canal-bg/90 backdrop-blur-md border-b border-canal-border/20 transition-all duration-300">
+    <header className="sticky top-0 z-50 bg-canal-alt/90 backdrop-blur-md border-b border-canal-border/20 transition-all duration-300">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between lg:grid lg:grid-cols-3">
         {/* Lado Izquierdo: Enlaces (Escritorio) */}
         <nav className="hidden lg:flex items-center gap-8 justify-start">
-          <a
-            href="/#carta"
-            className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
-          >
-            La Carta
-          </a>
-          <a
-            href="/#menus"
+          <Link
+            to="/menus"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Menús
-          </a>
+          </Link>
           <Link
             to="/celler"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
@@ -58,12 +52,12 @@ export default function NavBar() {
 
         {/* Lado Derecho: Enlace y CTA (Escritorio) */}
         <div className="hidden lg:flex items-center gap-8 justify-end">
-          <a
-            href="/#filosofia"
+          <Link
+            to="/filosofia"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Filosofia
-          </a>
+          </Link>
           <button
             onClick={handleReservationClick}
             className="px-6 py-2.5 border border-canal-border hover:border-canal-text text-canal-text font-sans-humanist uppercase text-[10px] tracking-[0.2em] font-semibold hover:bg-canal-text hover:text-canal-bg transition-all duration-500 ease-out cursor-pointer active:scale-95"
@@ -107,27 +101,20 @@ export default function NavBar() {
       {/* Menú Desplegable Móvil */}
       <div
         className={`lg:hidden transition-all duration-500 ease-in-out border-b border-canal-border/20 overflow-hidden ${
-          isOpen ? "max-h-screen opacity-100 bg-canal-bg" : "max-h-0 opacity-0"
+          isOpen ? "max-h-screen opacity-100 bg-canal-alt" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-6 py-8 flex flex-col items-center">
           {/* Tarjeta con Doble Borde para el Menú Móvil */}
           <div className="border border-canal-border/40 p-1 w-full max-w-xs bg-canal-bg">
             <div className="border border-canal-border/40 py-8 px-4 flex flex-col gap-6 items-center text-center">
-              <a
-                href="/#carta"
-                onClick={() => setIsOpen(false)}
-                className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
-              >
-                La Carta
-              </a>
-              <a
-                href="/#menus"
+              <Link
+                to="/menus"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Menús
-              </a>
+              </Link>
               <Link
                 to="/celler"
                 onClick={() => setIsOpen(false)}
@@ -135,13 +122,13 @@ export default function NavBar() {
               >
                 El Celler
               </Link>
-              <a
-                href="/#filosofia"
+              <Link
+                to="/filosofia"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Filosofia
-              </a>
+              </Link>
 
               <div className="w-8 h-[1px] bg-canal-border/40 my-1"></div>
 

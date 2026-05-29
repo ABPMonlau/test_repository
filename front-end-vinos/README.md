@@ -36,7 +36,8 @@ front-end-vinos/
 │       ├── Hero.jsx        — Banner de presentación editorial atrevido y asimétrico
 │       ├── HeroImageCard.jsx — Componente modular para las imágenes del collage 3D
 │       ├── ListaVino.jsx   — Listado de vinos
-│       └── CardVino.jsx    — Tarjeta individual de vino
+│       ├── CardVino.jsx    — Tarjeta individual de vino
+|       └── Footer.jsx      - Componente Footer para toda la web
 ├── public/                 — Archivos estáticos públicos
 ├── docs/
 │   └── react-router.md    — Guía de uso de React Router
@@ -56,11 +57,13 @@ front-end-vinos/
 | **NavBar** | `src/components/NavBar.jsx` | Barra de navegación interactiva con scroll suave al inicio en la Home. | ✅ Listo |
 | **Hero** | `src/components/Hero.jsx` | Banner de bienvenida con estructura editorial asimétrica en 3D y maquetación móvil dedicada. | ✅ Listo |
 | **HeroImageCard** | `src/components/HeroImageCard.jsx` | Componente modular que optimiza y encuadra las imágenes en marcos dobles con hover states. | ✅ Listo |
-| **ListaVino** | `src/components/ListaVino.jsx` | Muestra el listado completo de vinos obtenidos desde la API. | 🚧 En desarrollo |
-| **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida de un vino individual. | 🚧 En desarrollo |
+| **ListaVinos** | `src/components/ListaVinos.jsx` | Muestra el listado completo de vinos obtenidos desde la API con buscador y filtros rápidos. | ✅ Listo |
+| **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida e imágenes dinámicas de un vino individual. | ✅ Listo |
+| **Footer** | `src/components/Footer.jsx` | Componente con información sobre el restaurante + Link a Instagram del mismo. | ✅ Listo |
 
 > [!IMPORTANT]
-> La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de componentes modulares del Hero y NavBar están completamente finalizados. Los componentes del catálogo de vinos (`ListaVino` y `CardVino`) continúan en fase de desarrollo.
+> La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de todos los componentes modulares de vinos (`ListaVinos` y `CardVino`), del Hero y del NavBar están **completamente finalizados y validados**.
+
 
 ---
 
@@ -68,11 +71,13 @@ front-end-vinos/
 
 El frontend consume los endpoints de la API REST `api-vinos` (desarrollada con Flask). La comunicación se realiza mediante peticiones HTTP (`fetch` o similar) al backend.
 
-```text
-┌─────────────────┐         HTTP         ┌─────────────────┐
-│  front-end-vinos│  ──────────────────▶  │    api-vinos    │
-│  localhost:5173  │  ◀──────────────────  │  (Flask API)    │
-└─────────────────┘      JSON responses   └─────────────────┘
+```mermaid
+sequenceDiagram
+    participant FE as "front-end-vinos (localhost:5173)"
+    participant API as "api-vinos (Flask API)"
+
+    FE->>API: GET /vinos (HTTP Request)
+    API-->>FE: JSON responses (HTTP 200)
 ```
 
 > [!WARNING]
