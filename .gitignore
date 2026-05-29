@@ -57,3 +57,21 @@ api-vinos/.ruff_cache/
 api-vinos/.coverage
 htmlcov/
 api-vinos/htmlcov/
+
+# --- Java y compilación de Maven ---
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+.mvn/wrapper/maven-wrapper.jar
+
+# --- Entorno y credenciales de Base de Datos ---
+bbdd/.env
+bbdd/.env.local
+bbdd/.env.*.local
+
