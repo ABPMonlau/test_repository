@@ -1,25 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from functools import wraps
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 import mysql.connector
 from mysql.connector import pooling
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
+
 vinos_bp = Blueprint("vinos", __name__)
-
-
-# --- EL PORTERO (Copia local para evitar dependencias circulares) ---
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "logueado" not in session:
-            flash("Acceso denegado. Inicia sesión primero.", "error")
-            return redirect("/login")
-        return f(*args, **kwargs)
-
-    return decorated_function
-
 
 # --- CONFIGURACIÓN DEL POOL DE CONEXIONES ---
 db_pool = mysql.connector.pooling.MySQLConnectionPool(
@@ -33,20 +21,23 @@ db_pool = mysql.connector.pooling.MySQLConnectionPool(
 )
 
 
+# --- ESCUDO 1: EL DESFIBRILADOR ---
 def get_vinos_db():
     db = db_pool.get_connection()
     try:
+        # Obliga a la conexión a hacer un "ping" a la Raspberry.
+        # Si no responde, lo intenta 3 veces seguidas antes de rendirse.
         db.ping(reconnect=True, attempts=3, delay=1)
     except:
-        pass
+        pass  # Si falla definitivamente, lo cazará el try...finally de las rutas
     return db
 
 
-# --- 1. LEER: Mostrar todos los vinos ---
+# --- 1. LEER: Mostrar todos los vinos (CON BUCLE DE REINTENTOS) ---
 @vinos_bp.route("/vinos")
-@login_required
 def lista_vinos():
     max_intentos = 3
+
     for intento in range(max_intentos):
         db = None
         cursor = None
@@ -63,16 +54,18 @@ def lista_vinos():
             """
             cursor.execute(query)
             vinos = cursor.fetchall()
+
+            # Si llega hasta aquí, ha triunfado. Rompe el bucle y carga la página.
             return render_template("vinos_lista.html", vinos=vinos)
 
         except mysql.connector.errors.OperationalError as e:
+            # Si es el último intento y sigue fallando, entonces sí mostramos el error
             if intento == max_intentos - 1:
                 raise e
-            print(
-                f"⚠️ Micro-corte de red detectado (Intento {intento + 1}). Reintentando..."
-            )
+            print(f"⚠️ Micro-corte detectado (Intento {intento + 1}). Reintentando...")
 
         finally:
+            # Cerramos todo correctamente en cada intento, ya sea éxito o fracaso
             try:
                 if cursor:
                     cursor.close()
@@ -87,7 +80,6 @@ def lista_vinos():
 
 # --- 2. CREAR: Añadir un vino nuevo ---
 @vinos_bp.route("/vinos/nuevo", methods=["GET", "POST"])
-@login_required
 def nuevo_vino():
     db = get_vinos_db()
     cursor = db.cursor(dictionary=True, buffered=True)
@@ -110,27 +102,16 @@ def nuevo_vino():
             flash("El vino se ha guardado correctamente en el catálogo.", "success")
             return redirect(url_for("vinos.lista_vinos"))
 
-        # Para el método GET, cargamos las listas del formulario
         cursor.execute("SELECT * FROM tipos")
         tipos = cursor.fetchall()
 
         cursor.execute("SELECT * FROM bodegas")
         bodegas = cursor.fetchall()
 
-        # OBTENEMOS LAS ZONAS ÚNICAS PARA EL AUTCOMPLETADO
-        cursor.execute(
-            "SELECT DISTINCT zona_origen FROM vinos WHERE zona_origen IS NOT NULL AND zona_origen != '' ORDER BY zona_origen"
-        )
-        zonas_existentes = cursor.fetchall()
-
-        return render_template(
-            "vinos_form.html",
-            tipos=tipos,
-            bodegas=bodegas,
-            zonas_existentes=zonas_existentes,
-        )
+        return render_template("vinos_form.html", tipos=tipos, bodegas=bodegas)
 
     finally:
+        # --- CIERRE SEGURO ---
         try:
             cursor.close()
         except:
@@ -143,7 +124,6 @@ def nuevo_vino():
 
 # --- 3. BORRAR: Eliminar un vino ---
 @vinos_bp.route("/vinos/borrar/<int:id>", methods=["POST"])
-@login_required
 def borrar_vino(id):
     db = get_vinos_db()
     cursor = db.cursor()
@@ -151,10 +131,12 @@ def borrar_vino(id):
     try:
         cursor.execute("DELETE FROM vinos WHERE vino_id = %s", (id,))
         db.commit()
+
         flash("Vino eliminado del catálogo de forma exitosa.", "success")
         return redirect(url_for("vinos.lista_vinos"))
 
     finally:
+        # --- CIERRE SEGURO ---
         try:
             cursor.close()
         except:

@@ -24,11 +24,7 @@
     {% endif %}
     {% endwith %}
 
-    <div class="search-container">
-        <input type="text" id="buscador" class="search-input" placeholder="Buscar por nombre, tipo, bodega o zona...">
-    </div>
-
-    <table id="tabla-vinos">
+    <table>
         <thead>
             <tr>
                 <th>Nombre del Vino</th>
@@ -40,11 +36,11 @@
         </thead>
         <tbody>
             {% for vino in vinos %}
-            <tr class="fila-vino">
-                <td class="col-nombre"><strong>{{ vino.vino_nombre }}</strong></td>
-                <td class="col-tipo">{{ vino.tipo_nombre or 'Sin clasificar' }}</td>
-                <td class="col-bodega">{{ vino.bodega_nombre or 'Bodega desconocida' }}</td>
-                <td class="col-zona">{{ vino.zona_origen or '-' }}</td>
+            <tr>
+                <td><strong>{{ vino.vino_nombre }}</strong></td>
+                <td>{{ vino.tipo_nombre or 'Sin clasificar' }}</td>
+                <td>{{ vino.bodega_nombre or 'Bodega desconocida' }}</td>
+                <td>{{ vino.zona_origen or '-' }}</td>
                 <td>
                     <form action="/vinos/borrar/{{ vino.vino_id }}" method="POST" style="display:inline;">
                         <button type="submit" class="btn btn-danger"
@@ -53,21 +49,14 @@
                 </td>
             </tr>
             {% else %}
-            <tr id="fila-vacia">
+            <tr>
                 <td colspan="5" style="text-align: center; font-style: italic; padding: 40px; color: #59544B;">
                     No hay ningún vino registrado en el catálogo en este momento.
                 </td>
             </tr>
             {% endfor %}
-            <tr id="sin-resultados" style="display: none;">
-                <td colspan="5" style="text-align: center; font-style: italic; padding: 40px; color: #cc0000;">
-                    No se han encontrado vinos que coincidan con tu búsqueda.
-                </td>
-            </tr>
         </tbody>
     </table>
-
-    <script src="{{ url_for('static', filename='buscador.js') }}"></script>
 </body>
 
 </html>

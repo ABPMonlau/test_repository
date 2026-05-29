@@ -32,14 +32,8 @@
                 {% endfor %}
             </select>
 
-            <label>Zona de Origen (Escribe o selecciona)</label>
-            <input type="text" name="zona_origen" maxlength="100" list="sugerencias_zonas" autocomplete="off"
-                placeholder="Ej. Rioja, Ribera del Duero...">
-            <datalist id="sugerencias_zonas">
-                {% for zona in zonas_existentes %}
-                <option value="{{ zona.zona_origen }}"></option>
-                {% endfor %}
-            </datalist>
+            <label>Zona de Origen</label>
+            <input type="text" name="zona_origen" maxlength="100">
 
             <label>Descripción / Notas de cata</label>
             <textarea name="vino_desc" rows="3"></textarea>

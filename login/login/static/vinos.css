@@ -125,26 +125,3 @@ textarea {
     font-style: italic;
     text-align: center;
 }
-
-
-/* --- ESTILOS DEL BUSCADOR EN TIEMPO REAL --- */
-.search-container {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.search-input {
-    width: 50%;
-    min-width: 300px;
-    padding: 12px 20px;
-    font-size: 16px;
-    border: 2px solid #ccc;
-    border-radius: 25px;
-    outline: none;
-    transition: border-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.search-input:focus {
-    border-color: #59544B;
-}
