@@ -1,7 +1,9 @@
 # --- Herramientas de desarrollo e IDEs ---
 .DS_Store
 Thumbs.db
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.suo
 *.ntvs*
@@ -40,5 +42,18 @@ front-end-vinos/yarn-debug.log*
 front-end-vinos/pnpm-debug.log*
 front-end-vinos/coverage/
 
-# --- Base de datos (bbdd) ---
 bbdd/**/data/
+
+# --- Cachés de análisis y pruebas (Node & Python) ---
+.eslintcache
+front-end-vinos/.eslintcache
+.pytest_cache/
+api-vinos/.pytest_cache/
+.mypy_cache/
+api-vinos/.mypy_cache/
+.ruff_cache/
+api-vinos/.ruff_cache/
+.coverage
+api-vinos/.coverage
+htmlcov/
+api-vinos/htmlcov/

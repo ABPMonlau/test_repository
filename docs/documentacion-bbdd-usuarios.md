@@ -21,6 +21,42 @@ Este documento describe en detalle el esquema de la base de datos `usuarios-laca
 
 La base de datos `usuarios-lacanal` está aislada de los catálogos operativos (vinos y reservas) por razones de seguridad e integridad de datos. Su único propósito es autenticar a los miembros del equipo autorizados para acceder al panel de administración del restaurante.
 
+### Diagrama Entidad-Relación
+
+```mermaid
+erDiagram
+    USERS {
+        INT id PK "AUTO_INCREMENT"
+        VARCHAR username "UNIQUE, NOT NULL"
+        VARCHAR password_hash "NOT NULL"
+        TIMESTAMP created_at "DEFAULT CURRENT_TIMESTAMP"
+    }
+```
+
+### Flujo de Autenticación
+
+```mermaid
+sequenceDiagram
+    participant U as Administrador
+    participant FE as Frontend (Panel Admin)
+    participant API as API Flask
+    participant DB as usuarios-lacanal
+
+    U->>FE: Introduce username + contraseña
+    FE->>FE: Calcula SHA-256(contraseña)
+    FE->>API: POST /login {username, password_hash}
+    API->>DB: SELECT id, password_hash FROM users WHERE username = ?
+    DB-->>API: Registro del usuario
+    API->>API: Compara hash recibido con hash almacenado
+    alt Hash coincide
+        API-->>FE: 200 OK + token de sesión
+        FE-->>U: Acceso concedido ✅
+    else Hash NO coincide
+        API-->>FE: 401 Unauthorized
+        FE-->>U: Credenciales incorrectas ❌
+    end
+```
+
 ---
 
 ## 2. Estructura de la Tabla `users`

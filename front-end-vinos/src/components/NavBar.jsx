@@ -108,13 +108,6 @@ export default function NavBar() {
           {/* Tarjeta con Doble Borde para el Menú Móvil */}
           <div className="border border-canal-border/40 p-1 w-full max-w-xs bg-canal-bg">
             <div className="border border-canal-border/40 py-8 px-4 flex flex-col gap-6 items-center text-center">
-              <a
-                href="/#carta"
-                onClick={() => setIsOpen(false)}
-                className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
-              >
-                La Carta
-              </a>
               <Link
                 to="/menus"
                 onClick={() => setIsOpen(false)}

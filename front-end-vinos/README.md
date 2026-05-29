@@ -59,7 +59,7 @@ front-end-vinos/
 | **HeroImageCard** | `src/components/HeroImageCard.jsx` | Componente modular que optimiza y encuadra las imágenes en marcos dobles con hover states. | ✅ Listo |
 | **ListaVinos** | `src/components/ListaVinos.jsx` | Muestra el listado completo de vinos obtenidos desde la API con buscador y filtros rápidos. | ✅ Listo |
 | **CardVino** | `src/components/CardVino.jsx` | Tarjeta con la información resumida e imágenes dinámicas de un vino individual. | ✅ Listo |
-| **Footer** | `src/components/CardVino.jsx` | Componente con información sobre el restaurante + Link a Instagram del mismo. | ✅ Listo |
+| **Footer** | `src/components/Footer.jsx` | Componente con información sobre el restaurante + Link a Instagram del mismo. | ✅ Listo |
 
 > [!IMPORTANT]
 > La maquetación de la página de inicio (Landing Page), el ruteado dinámico y la estructura de todos los componentes modulares de vinos (`ListaVinos` y `CardVino`), del Hero y del NavBar están **completamente finalizados y validados**.
@@ -71,11 +71,13 @@ front-end-vinos/
 
 El frontend consume los endpoints de la API REST `api-vinos` (desarrollada con Flask). La comunicación se realiza mediante peticiones HTTP (`fetch` o similar) al backend.
 
-```text
-┌─────────────────┐         HTTP         ┌─────────────────┐
-│  front-end-vinos│  ──────────────────▶  │    api-vinos    │
-│  localhost:5173  │  ◀──────────────────  │  (Flask API)    │
-└─────────────────┘      JSON responses   └─────────────────┘
+```mermaid
+sequenceDiagram
+    participant FE as "front-end-vinos (localhost:5173)"
+    participant API as "api-vinos (Flask API)"
+
+    FE->>API: GET /vinos (HTTP Request)
+    API-->>FE: JSON responses (HTTP 200)
 ```
 
 > [!WARNING]
