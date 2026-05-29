@@ -108,11 +108,11 @@ public class reserveController {
         return new ResponseEntity<>("Successfully Cancelled", HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/buscar/libres")
-    public ResponseEntity<?> checkReserve(@RequestBody books b) {
+    @GetMapping("/buscar/libres/{num}{shift}")
+    public ResponseEntity<?> checkReserve(@PathVariable int num, @PathVariable String shift) {
         System.out.print("Checking for tables...");
 
-        List<tables> tableList = tableDAO.getAvaliableTables(b.getGuests(), timeShiftStates.maniana);
+        List<tables> tableList = tableDAO.getAvaliableTables(num, shift);
 
         if (tableList.isEmpty()) {
             System.out.println("No available tables found!");

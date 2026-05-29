@@ -24,10 +24,10 @@ public class tableDAOImpl implements tableDAO {
     }
 
     @Override
-    public List<tables> getAvaliableTables(int guests, timeShiftStates tss) {
+    public List<tables> getAvaliableTables(int guests, String tss) {
         String query = "SELECT * FROM mesas_turnos mt JOIN mesas m ON(mt.id_mesa = m.id_mesa) WHERE (m.capacidad >= ? AND m.capacidad - 2 <= ?) AND m.activa = 1 AND mt.id_turno = ? ORDER BY m.capacidad ASC";
 
-        int tssi = (tss == timeShiftStates.maniana) ? 1 : (tss == timeShiftStates.comida) ? 2 : 3;
+        int tssi = (tss.equals("maniana")) ? 1 : (tss.equals("comida")) ? 2 : 3;
 
         return jdbc.query(query, rowMapper, guests, guests, tssi);
     }

@@ -3,8 +3,12 @@ package com.book_api.dao.booksDAO;
 import com.book_api.model.classes.books;
 
 import com.book_api.model.classes.clients;
+
 import com.book_api.model.classes.shifts;
+import com.book_api.dao.shiftsDAO.shiftDAOImpl;
+
 import com.book_api.model.classes.tables;
+
 import com.book_api.model.enums.bookStates;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +17,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class bookRowMapper implements RowMapper<books> {
+    static final shiftDAOImpl shift = new shiftDAOImpl();
+
     @Override
     public books mapRow(ResultSet rs, int rowNum) throws SQLException {
         books b = new books();
@@ -28,10 +34,7 @@ public class bookRowMapper implements RowMapper<books> {
                 (state.equals("Cancelada")) ? bookStates.Cancelada :
                 bookStates.Completada);
 
-        shifts s = new shifts();
-        s.setId(rs.getInt("id_turno"));
-
-        b.setShift(s);
+        b.setShift(shift.getShiftById(rs.getInt("id_turno")));
 
         tables t = new tables();
         t.setId(rs.getInt("id_mesa"));
