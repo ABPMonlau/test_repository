@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Componente CardVino — Tarjeta individual de presentación de un vino.
+ *
+ * Recibe un objeto `vino` procedente del endpoint `GET /vinos` de la API Flask
+ * y renderiza una tarjeta editorial con imagen dinámica según el tipo de vino,
+ * ficha técnica (añada, formato, copa) y metadatos de bodega y origen.
+ *
+ * Las imágenes se resuelven de forma local mediante el mapa {@link WINE_IMAGES};
+ * no se requiere ninguna petición adicional a la red para las miniaturas.
+ */
 
 // Mapeo de fotos editoriales premium de Unsplash para cada tipo de vino
 const WINE_IMAGES = {
@@ -9,6 +19,32 @@ const WINE_IMAGES = {
   default: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=600&h=800&q=80"
 };
 
+/**
+ * Tarjeta visual de un vino individual.
+ *
+ * @component
+ * @param {Object}  props                        - Props del componente.
+ * @param {Object}  props.vino                   - Objeto con los datos del vino, tal como
+ *                                                 lo devuelve la API en `GET /vinos`.
+ * @param {string}  props.vino.vino_nombre       - Nombre comercial del vino.
+ * @param {string}  props.vino.tipo_nombre       - Tipo de vino ("tinto", "blanco", "rosado",
+ *                                                 "espumoso", "rosat"). Usado para seleccionar
+ *                                                 la imagen editorial de forma case-insensitive.
+ * @param {string}  props.vino.bodega_nombre     - Nombre de la bodega productora.
+ * @param {string}  props.vino.zona_origen       - Denominación de origen o zona geográfica.
+ * @param {number}  props.vino.anio              - Año de la cosecha (añada). Puede ser `null`;
+ *                                                 en ese caso se muestra un guion ("—").
+ * @param {string}  props.vino.formato_capacidad - Capacidad del formato en ml (p. ej. "750").
+ * @param {string}  [props.vino.copa_nombre]     - Copa de servicio recomendada. Campo opcional;
+ *                                                 si no se recibe, la fila de la ficha técnica
+ *                                                 no se renderiza.
+ *
+ * @returns {JSX.Element} Elemento `<article>` con la tarjeta completa del vino.
+ *
+ * @example
+ * // Uso dentro de ListaVinos.jsx:
+ * <CardVino key={vino.vino_nombre} vino={vino} />
+ */
 export default function CardVino({ vino }) {
   const {
     vino_nombre,
@@ -16,14 +52,12 @@ export default function CardVino({ vino }) {
     bodega_nombre,
     zona_origen,
     anio,
-    Capacidad,
-    // A veces la base de datos lo retorna con la clave del CONCAT original si hay alguna variación
-    "CONCAT(form.formato_capacidad, ' ml')": capacidadRaw,
+    formato_capacidad,
     copa_nombre
   } = vino;
 
   // Determinar la capacidad limpia
-  const capacidadLimpia = Capacidad || capacidadRaw || "750 ml";
+  const capacidadLimpia =  `${formato_capacidad} ml`;
 
   // Obtener la imagen según el tipo de vino de forma case-insensitive
   const tipoKey = tipo_nombre ? tipo_nombre.toLowerCase().trim() : "default";

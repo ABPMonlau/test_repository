@@ -19,31 +19,24 @@ API REST construida con **Python + Flask** que actúa como capa de acceso a dato
 
 ## 1. Arquitectura del proyecto
 
-```
-front-end-vinos (React/Vite)
-        │
-        │  HTTP (JSON)
-        ▼
-  api-vinos (Flask)
-        │
-        │  pymysql
-        ▼
-  bbdd (MariaDB via Docker)
+```mermaid
+graph TD
+    A["🖥️ front-end-vinos<br/><i>React / Vite</i>"] -->|"HTTP &lpar;JSON&rpar;"| B["⚙️ api-vinos<br/><i>Flask</i>"]
+    B -->|"pymysql"| C["🗄️ bbdd<br/><i>MariaDB via Docker</i>"]
 ```
 
 La API sigue el patrón **Blueprint** de Flask con una separación de responsabilidades en tres capas:
 
-```
-controller/controller.py   →   lógica HTTP (rutas, respuestas JSON)
-        │
-        │  importa funciones de consulta
-        ▼
-database/queries.py        →   carga el SQL desde JSON y lo ejecuta
-        │                  │
-        │  lee al arrancar  └──→  database/querys.json  →  SQL puro
-        │  usa get_connection()
-        ▼
-database/connection.py     →   solo abre y devuelve la conexión a MariaDB
+```mermaid
+graph TD
+    CTRL["controller/controller.py<br/><i>Lógica HTTP: rutas y respuestas JSON</i>"]
+    QRY["database/queries.py<br/><i>Carga el SQL desde JSON y lo ejecuta</i>"]
+    JSON["database/querys.json<br/><i>SQL puro como pares clave-valor</i>"]
+    CONN["database/connection.py<br/><i>Fábrica de conexión a MariaDB</i>"]
+
+    CTRL -->|"importa funciones de consulta"| QRY
+    QRY -->|"lee al arrancar"| JSON
+    QRY -->|"usa get_connection()"| CONN
 ```
 
 - `app.py` — Punto de entrada. Crea la app Flask y registra el Blueprint.
@@ -180,13 +173,26 @@ Flask localiza los módulos `controller` y `database` como paquetes Python porqu
 Devuelve los vinos con todos sus datos relacionados: tipo, bodega, cosecha, formato y copa.
 
 **Cadena de llamadas:**
-```
-GET /vinos
-  → controller.vinos()
-  → database.queries.get_all_vinos()
-      ↳ lee _QUERIES["get_vinos"] cargado desde querys.json
-  → database.connection.get_connection()  +  cursor.execute(sql)
-  → jsonify(data)  →  respuesta HTTP 200
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente HTTP
+    participant CTRL as controller.py
+    participant QRY as queries.py
+    participant JSON as querys.json
+    participant CONN as connection.py
+    participant DB as MariaDB
+
+    C->>CTRL: GET /vinos
+    CTRL->>QRY: get_all_vinos()
+    QRY->>JSON: lee _QUERIES["get_vinos"]
+    JSON-->>QRY: SQL string
+    QRY->>CONN: get_connection()
+    CONN-->>QRY: conexión pymysql
+    QRY->>DB: cursor.execute(sql)
+    DB-->>QRY: filas DictCursor
+    QRY-->>CTRL: lista de dicts
+    CTRL-->>C: jsonify(data) → HTTP 200
 ```
 
 **Request**
