@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap');
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background-color: #f9f8f3; /* Color crema inspirado en la imagen */
+  color: #2b2b2b; /* Gris muy oscuro, más suave que el negro puro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#reserva-form {
+  background: transparent;
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.seccion {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.alinear-centro {
+  align-items: center;
+}
+
+.seccion label, .seccion p {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #2b2b2b;
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+.seccion input:not([type="radio"]), .seccion select {
+  padding: 12px;
+  border: 1px solid #2b2b2b;
+  background-color: transparent;
+  color: #2b2b2b;
+  font-family: inherit;
+  font-size: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  outline: none;
+}
+
+.seccion input:focus {
+  background-color: #fff;
+}
+
+/* Comensales */
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  border: 1px solid #2b2b2b;
+  overflow: hidden;
+  width: 200px;
+}
+.control-cantidad button {
+  flex: 1;
+  background-color: transparent;
+  color: #2b2b2b;
+  font-size: 24px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.control-cantidad button:hover { background-color: rgba(0,0,0,0.05); }
+
+.seccion .aviso-personas {
+  font-size: 19px;
+  color: #666;
+  margin-top: 10px;
+  max-width: 280px;
+  line-height: 1.3;
+  font-style: italic;
+  animation: fadeIn 0.3s ease-in-out;
+  /* Reset inherited styles from .seccion p */
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: none;
+  padding-bottom: 0;
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#display-comensales {
+  flex: 1.5;
+  text-align: center;
+  font-size: 22px;
+  font-family: inherit;
+  border: none;
+  border-left: 1px solid #2b2b2b;
+  border-right: 1px solid #2b2b2b;
+  background: transparent;
+  padding: 10px 0;
+  outline: none;
+  color: #2b2b2b;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+#display-comensales::-webkit-outer-spin-button,
+#display-comensales::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Fechas */
+.grid-fechas {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #2b2b2b;
+  background: transparent;
+  color: #2b2b2b;
+  padding: 12px 10px;
+  cursor: pointer;
+  min-width: 60px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+.btn-fecha:hover { background-color: rgba(0,0,0,0.05); }
+.btn-fecha span:nth-child(1) { font-size: 12px; letter-spacing: 1px; }
+.btn-fecha span:nth-child(2) { font-size: 26px; font-weight: 600; margin: 4px 0; }
+.btn-fecha span:nth-child(3) { font-size: 12px; letter-spacing: 1px; }
+.btn-fecha.seleccionado { background-color: #2b2b2b; color: #f9f8f3; }
+
+.contenedor-fecha-mas { display: flex; justify-content: center; width: 100%; margin-bottom: 10px; }
+.btn-fecha-mas {
+  width: 60px;
+  background: transparent;
+  border: 1px solid #2b2b2b;
+  color: #2b2b2b;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 8px;
+  cursor: pointer;
+}
+.btn-fecha-mas:hover { background-color: rgba(0,0,0,0.05); }
+.input-fecha-centrado { max-width: 250px; margin: 0 auto; display: block; }
+
+/* Turnos */
+.grid-turnos { display: flex; gap: 15px; width: 100%; max-width: 350px; justify-content: center; }
+.btn-turno {
+  flex: 1;
+  background-color: transparent;
+  color: #2b2b2b;
+  border: 1px solid #2b2b2b;
+  padding: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+.btn-turno:hover { background-color: rgba(0,0,0,0.05); }
+.btn-turno.seleccionado { background-color: #2b2b2b; color: #f9f8f3; }
+
+/* Horas */
+.grid-horas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; }
+.btn-hora {
+  background-color: transparent;
+  color: #2b2b2b;
+  border: 1px solid #2b2b2b;
+  padding: 12px;
+  font-size: 18px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-hora:hover:not(:disabled) { background-color: rgba(0,0,0,0.05); }
+.btn-hora.seleccionado { background-color: #2b2b2b; color: #f9f8f3; }
+.btn-hora:disabled { border-color: #ccc; color: #ccc; text-decoration: line-through; cursor: not-allowed; }
+
+/* Botones Principales de Navegación */
+.botones-grupo { display: flex; gap: 15px; width: 100%; margin-top: 20px;}
+button[type="submit"], #fase-1 > button, .botones-grupo button {
+  background-color: #2b2b2b;
+  color: #f9f8f3;
+  border: 1px solid #2b2b2b;
+  padding: 15px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+button[type="submit"]:hover, #fase-1 > button:hover, .botones-grupo button:hover { background-color: #1a1a1a; }
+
+.btn-secundario {
+  background-color: transparent !important;
+  color: #2b2b2b !important;
+  border: 1px solid #2b2b2b !important;
+}
+.btn-secundario:hover { background-color: rgba(0,0,0,0.05) !important; }
+
+.oculto { display: none !important; }
+
+/* Decoración extra para el calendario nativo extra */
+#fecha-extra {
+  padding: 12px;
+  border: 1px solid #2b2b2b;
+  border-radius: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+/* Logo */
+.cabecera-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#logo-restaurante {
+  max-width: 120px; /* Ajusta según el tamaño de tu imagen */
+  height: auto;
+}
+
+/* Footer de información */
+.footer-info {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(43, 43, 43, 0.2);
+  text-align: center;
+  color: rgba(43, 43, 43, 0.6); /* Color más tenue para ser discreto */
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.footer-info p {
+  margin: 2px 0;
+  font-weight: 400;
+  border-bottom: none;
+  letter-spacing: normal;
+  text-transform: none;
+  display: block;
+}
+
+/* --- ESTILOS PERSONALIZADOS PARA EL CALENDARIO (FLATPICKR) --- */
+.flatpickr-calendar {
+  background-color: #f9f8f3 !important;
+  border: 1px solid #2b2b2b !important;
+  font-family: 'Cormorant Garamond', serif !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+  border-radius: 0 !important; /* Bordes rectos para mantener la elegancia */
+}
+
+/* Color de los días y meses */
+.flatpickr-day, .flatpickr-current-month, .flatpickr-weekday, .flatpickr-month {
+  color: #2b2b2b !important;
+  fill: #2b2b2b !important; /* Para las flechas */
+}
+
+/* Efecto al pasar el ratón (hover) */
+.flatpickr-day:hover:not(.selected) {
+  background-color: rgba(43, 43, 43, 0.05) !important;
+  border-color: transparent !important;
+}
+
+/* Día seleccionado (invierte los colores como en tus botones) */
+.flatpickr-day.selected {
+  background-color: #2b2b2b !important;
+  border-color: #2b2b2b !important;
+  color: #f9f8f3 !important;
+}
+
+/* Días deshabilitados (fuera del rango de 4 meses) */
+.flatpickr-day.flatpickr-disabled {
+  color: rgba(43, 43, 43, 0.3) !important;
+}
