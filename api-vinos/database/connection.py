@@ -9,7 +9,7 @@ def get_connection_wine():
     """
 
     connection_wine = pymysql.connect(
-        host="172.17.34.40",
+        host="127.0.0.1",
         port=3306,
         user="vinosadmin",
         password="1234",

@@ -7,10 +7,22 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: la-canal-admin
     volumes:
-      # Scripts de inicialización (se ejecutan en orden alfabético)
       - ./init-scripts:/docker-entrypoint-initdb.d
-      # Volumen persistente para los datos
       - db_data:/var/lib/mysql
+
+  book-api:
+    build:
+      context: ../book_api
+      dockerfile: Dockerfile
+    container_name: book-api
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db-la-canal
+      - DB_PORT=3306
+    depends_on:
+      db-la-canal:
+        condition: service_healthy
 
 volumes:
   db_data:
