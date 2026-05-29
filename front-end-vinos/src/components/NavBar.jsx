@@ -52,12 +52,12 @@ export default function NavBar() {
 
         {/* Lado Derecho: Enlace y CTA (Escritorio) */}
         <div className="hidden lg:flex items-center gap-8 justify-end">
-          <a
-            href="/#filosofia"
+          <Link
+            to="/filosofia"
             className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
           >
             Filosofia
-          </a>
+          </Link>
           <button
             onClick={handleReservationClick}
             className="px-6 py-2.5 border border-canal-border hover:border-canal-text text-canal-text font-sans-humanist uppercase text-[10px] tracking-[0.2em] font-semibold hover:bg-canal-text hover:text-canal-bg transition-all duration-500 ease-out cursor-pointer active:scale-95"
@@ -122,13 +122,13 @@ export default function NavBar() {
               >
                 El Celler
               </Link>
-              <a
-                href="/#filosofia"
+              <Link
+                to="/filosofia"
                 onClick={() => setIsOpen(false)}
                 className="font-sans-humanist text-xs uppercase tracking-[0.15em] text-canal-secondary hover:text-canal-text transition-colors duration-300 font-medium"
               >
                 Filosofia
-              </a>
+              </Link>
 
               <div className="w-8 h-[1px] bg-canal-border/40 my-1"></div>
 
