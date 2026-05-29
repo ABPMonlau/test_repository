@@ -1,4 +1,4 @@
-const back_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3306";
+const back_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
 
 /**
  * Consulta la disponibilidad de mesas para un número de comensales.
