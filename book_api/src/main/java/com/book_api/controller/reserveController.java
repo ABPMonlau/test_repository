@@ -109,7 +109,22 @@ public class reserveController {
     }
 
     @GetMapping("/buscar/libres")
-    public ResponseEntity<?> checkReserve(@RequestBody books b) {
+    public ResponseEntity<?> checkReserve() {
+        System.out.print("Checking for tables...");
+
+        List<tables> tableList = tableDAO.getAvaliableTables(0, timeShiftStates.maniana);
+
+        if (tableList.isEmpty()) {
+            System.out.println("No available tables found!");
+
+            return new ResponseEntity<>("No available tables found!", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(tableList, HttpStatus.OK);
+    }
+
+    @GetMapping("/buscar/libres/{b}")
+    public ResponseEntity<?> checkReserve(@PathVariable books b) {
         System.out.print("Checking for tables...");
 
         List<tables> tableList = tableDAO.getAvaliableTables(b.getGuests(), timeShiftStates.maniana);

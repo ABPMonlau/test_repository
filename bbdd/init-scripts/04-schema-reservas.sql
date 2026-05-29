@@ -12,6 +12,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- Borramos primero la tabla intermedia/hija que contiene las llaves foráneas
 DROP TABLE IF EXISTS `reservas`;
+DROP TABLE IF EXISTS `mesas_turnos`;
 
 -- Borramos las tablas padre
 DROP TABLE IF EXISTS `turnos`;
@@ -55,6 +56,15 @@ CREATE TABLE `turnos` (
     `hora_comienzo` TIME NOT NULL,
     `hora_cierre` TIME NOT NULL,
     `maxima_reserva` INT NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+-- 2.3.b Estructura para la tabla intermedia `mesas_turnos`
+CREATE TABLE `mesas_turnos` (
+    `id_mesa` int NOT NULL,
+    `id_turno` int NOT NULL,
+    PRIMARY KEY (`id_mesa`, `id_turno`),
+    CONSTRAINT `fk_mesas_turnos_mesa` FOREIGN KEY (`id_mesa`) REFERENCES `mesas` (`id_mesa`) ON DELETE CASCADE,
+    CONSTRAINT `fk_mesas_turnos_turno` FOREIGN KEY (`id_turno`) REFERENCES `turnos` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- 2.4. Estructura para la tabla `reservas` (Se crea al final porque depende de las 3 anteriores)
@@ -125,3 +135,8 @@ INSERT INTO `turnos` (
 -- Sunday
 ('Sunday', 'maniana', '08:00:00', '10:30:00', 30),
 ('Sunday', 'comida',  '13:00:00', '15:30:00', 30);
+
+-- 3.3. Datos para la tabla intermedia `mesas_turnos`
+INSERT INTO `mesas_turnos` (`id_mesa`, `id_turno`)
+SELECT m.id_mesa, t.id
+FROM mesas m, turnos t;
