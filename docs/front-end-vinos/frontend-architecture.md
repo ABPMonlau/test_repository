@@ -11,21 +11,27 @@ La aplicación se organiza bajo una estructura modular y limpia en el directorio
 ```text
 front-end-vinos/
 ├── public/                 # Recursos públicos puros sin procesar (ej. favicon)
-├── docs/                   # Documentación local sobre dependencias
 ├── src/                    # Código fuente principal de la aplicación
 │   ├── assets/             # Recursos estáticos locales procesados por Vite (imágenes oficiales)
 │   │   ├── crema_catalana.png
 │   │   ├── gourmet_catalan_dish.png
-│   │   └── grilled_fish.png
+│   │   ├── grilled_fish.png
+│   │   ├── algo_1.png
+│   │   ├── image_1.png
+│   │   └── wow_1.png
 │   ├── components/         # Componentes atómicos y modulares de la interfaz
 │   │   ├── NavBar.jsx      # Barra de navegación (soporte SPA y scroll suave)
 │   │   ├── Hero.jsx        # Banner principal (maquetación dual móvil/escritorio)
 │   │   ├── HeroImageCard.jsx # Componente modular para las tarjetas de imágenes
 │   │   ├── ListaVinos.jsx  # Catálogo de visualización, filtrado y agrupación de vinos
-│   │   └── CardVino.jsx    # Tarjeta editorial individual de vino
+│   │   ├── CardVino.jsx    # Tarjeta editorial individual de vino
+│   │   ├── CardMenu.jsx    # Tarjeta interactiva y desplegable de menú gastronómico
+│   │   └── Footer.jsx      # Pie de página institucional del restaurante (contacto, Instagram)
 │   ├── pages/              # Orquestadores de vistas/páginas de la aplicación
 │   │   ├── index.jsx       # Página de inicio (Landing Page) principal
-│   │   └── Celler.jsx      # Página de la bodega / catálogo de vinos (ruta: /celler)
+│   │   ├── Celler.jsx      # Página de la bodega / catálogo de vinos (ruta: /celler)
+│   │   ├── Filosofia.jsx   # Página de la filosofía culinaria y manifiesto (ruta: /filosofia)
+│   │   └── Menus.jsx       # Página del catálogo de menús de degustación (ruta: /menus)
 │   ├── App.css             # Estilos de componente específicos
 │   ├── App.jsx             # Componente raíz. Orquesta el mapa de rutas (<Routes>)
 │   ├── index.css           # Punto de entrada de estilos globales, variables y animaciones
@@ -44,20 +50,26 @@ La aplicación sigue un flujo unidireccional y desacoplado para inicializar el s
 ```mermaid
 graph TD
     A[main.jsx: Entrada React] -->|Strict Mode / BrowserRouter| B[App.jsx: Enrutador Raíz]
-    B -->|NavBar / Global Layout| C[Routes]
+    B -->|NavBar / Footer / Global Layout| C[Routes]
     C -->|Ruta: '/'| D[pages/index.jsx: Landing Page]
     C -->|Ruta: '/celler'| G[pages/Celler.jsx: Bodega]
+    C -->|Ruta: '/menus'| J[pages/Menus.jsx: Menús]
+    C -->|Ruta: '/filosofia'| K[pages/Filosofia.jsx: Filosofía]
     D -->|Orquesta| E[Hero.jsx]
     E -->|Renderiza| F[HeroImageCard.jsx: Tarjetas de imágenes]
     G -->|Orquesta| H[ListaVinos.jsx: Catálogo]
     H -->|Renderiza| I[CardVino.jsx: Tarjetas de vino]
+    J -->|Orquesta| L[CardMenu.jsx: Tarjetas de Menú]
+    K -->|Ofrece Enlace a| J
 ```
 
 ### Componentes de Ruteado:
 1. **`main.jsx`:** Envuelve el componente raíz `<App />` dentro de `<BrowserRouter>` de `react-router-dom`. Esto asegura que el contexto del enrutador cubra toda la aplicación una sola vez al nivel más alto.
-2. **`App.jsx`:** Actúa como la plantilla de maquetación global (`Global Layout`). Renderiza de forma persistente la cabecera `<NavBar />` en todas las páginas y declara la distribución de rutas hijas usando `<Routes>` y `<Route>`.
+2. **`App.jsx`:** Actúa como la plantilla de maquetación global (`Global Layout`). Renderiza de forma persistente la cabecera `<NavBar />` y el pie de página `<Footer />` en todas las páginas y declara la distribución de rutas hijas usando `<Routes>` y `<Route>`.
 3. **`pages/index.jsx`:** Actúa como el controlador de la ruta principal (`/`). Es el lienzo donde se montan las vistas modulares como la de bienvenida (`Hero`) y futuros bloques.
 4. **`pages/Celler.jsx`:** Controlador de la ruta `/celler`. Consume la API Flask de vinos y orquesta la vista del catálogo pasando los datos a `ListaVinos`.
+5. **`pages/Menus.jsx`:** Controlador de la ruta `/menus`. Renderiza de forma estructurada los tres menús del restaurante utilizando la tarjeta interactiva `CardMenu`.
+6. **`pages/Filosofia.jsx`:** Controlador de la ruta `/filosofia`. Renderiza la sección de manifiesto del restaurante y el mostrador interactivo de platos destacados.
 
 ---
 
@@ -173,6 +185,25 @@ El diseño visual está totalmente alineado con las *Directrices de Identidad de
   - **Ficha de Cosecha y Servicio:** Muestra la añada, capacidad formateada y, si existe en la base de datos, el tipo de copa recomendado para el servicio del sumiller.
   - **Micro-animaciones:** Aplica transiciones suaves en hover (elevación vertical en `translateY(-4px)` y efecto zoom de la imagen interior a `scale(1.05)` en 1.5s).
 
+#### 8. `CardMenu.jsx` (Tarjeta de Menú Interactivo Desplegable)
+* **Ubicación:** `front-end-vinos/src/components/CardMenu.jsx`
+* **Propósito:** Mostrar de manera interactiva la estructura de platos e ingredientes de un menú gastronómico del restaurante.
+* **Propiedades (Props):**
+  - `menu` (`Object`): Datos y estructura del menú (primers, segons, postres, precio, suplementos).
+* **Características Clave:**
+  - **Estado de Apertura (`isOpen`):** Un estado de React que controla de forma interactiva si el menú está colapsado o expandido con una animación de altura fluida (`max-h-300`).
+  - **Cambio de Color Dinámico:** Modifica su fondo de color según el estado (`bg-canal-alt` si está abierto, `bg-canal-bg` si está cerrado).
+  - **SVG ScrollFlourish:** Dibuja de manera vectorial una floritura clásica y una esfera central cobriza para realizar divisiones estéticas elegantes entre platos.
+  - **Desglose de Receta:** Recorre las secciones mapeando suplementos de precio y descripciones precisas de ingredientes en cursiva Serif.
+
+#### 9. `Footer.jsx` (Pie de Página Institucional)
+* **Ubicación:** `front-end-vinos/src/components/Footer.jsx`
+* **Propósito:** Ofrecer el pie de página unificado y corporativo del restaurante.
+* **Características Clave:**
+  - **Layout de Información Directa:** Incorpora una tarjeta de doble borde `.double-border-frame` que agrupa la dirección geolocalizada física con enlace a Google Maps, el teléfono directo clickable para reservas telefónicas rápidas y un botón interactivo de Instagram.
+  - **Copyright Dinámico:** Calcula el año en curso en tiempo real utilizando la API de fechas de JavaScript (`new Date().getFullYear()`).
+  - **Scroll Home Superior:** Integra un trigger que desplaza suavemente la ventana del usuario al pixel superior 0 si se pulsa el logo del pie de página estando en la Landing Page.
+
 ---
 
 ### C. Páginas y Controladores de Vistas
@@ -182,7 +213,7 @@ El diseño visual está totalmente alineado con las *Directrices de Identidad de
 * **Propósito:** Actuar como orquestador y contenedor de la Landing Page principal del restaurante.
 * **Funcionamiento:** Renderiza de forma modular la sección `<Hero />` y se encuentra estructurada para incorporar futuras secciones como Carta, Menús o Filosofía de manera secuencial.
 
-#### 9. `Celler.jsx` (Página de la Bodega)
+#### 11. `Celler.jsx` (Página de la Bodega)
 * **Ubicación:** `front-end-vinos/src/pages/Celler.jsx`
 * **Propósito:** Orquestar la vista de El Celler, gestionar la llamada HTTP y el control de resiliencia del frontend.
 * **Comportamiento y Ciclo de Vida (`useEffect`):**
@@ -193,7 +224,24 @@ El diseño visual está totalmente alineado con las *Directrices de Identidad de
     - **Capa de Resiliencia (Fallback):** En caso de fallo de red o timeout, captura el error de forma silenciosa (`setError(null)` y registra una advertencia en la consola), manteniendo una experiencia de usuario limpia mediante la omisión de mensajes de error de sistema agresivos.
   - **Navegación:** Integra un enlace de retorno de estilo editorial (`← Tornar a l'inici / Volver al inicio`) hacia la Home (`/`).
 
-#### 10. `App.css` (Boilerplate de Vite)
+#### 12. `Filosofia.jsx` (Página de la Filosofía y Manifiesto)
+* **Ubicación:** `front-end-vinos/src/pages/Filosofia.jsx`
+* **Propósito:** Orquestar la vista editorial de manifiesto y filosofía del restaurante.
+* **Secciones Clave:**
+  - **Sección 1: Galería Editorial Hero:** Carga un mosaico de imágenes locales asimétricas (`algo_1`, `image_1`, `wow_1`) simulando la maquetación de una revista física de alta gama, incorporando sutiles animaciones de flotado (`animate-soft-float` y `animate-soft-float-delayed`).
+  - **Sección 2: Manifiesto Culinario & Mostrador Gastronómico:**
+    - *Manifiesto (Izquierda):* Cuadro de doble borde con el manifiesto impreso del restaurante y botón interactivo para llamadas directas de reservas.
+    - *Mostrador Gastronómico (Derecha):* Pestañas de selección interactivas que alternan dinámicamente entre tres platos insignia del restaurante ("Mar i Graella", "Ibèric i Muntanya", "Dolç i Tradició") cambiando sus respectivas descripciones y fotografías al instante.
+  - **Scroll Top:** Se posiciona automáticamente en el pixel 0 de scroll al renderizarse la primera vez.
+
+#### 13. `Menus.jsx` (Página de Menús de Degustación)
+* **Ubicación:** `front-end-vinos/src/pages/Menus.jsx`
+* **Propósito:** Mostrar los menús del restaurante de forma impecable y digital.
+* **Características Clave:**
+  - **Estructura de Datos Local (`MENUS_DATA`):** Almacena de forma estática la información completa de los 3 menús de La Canal: *Menú del Dia* (19,50€), *Menú Cap de Setmana* (35€) y *Menú Interludi* (45€), detallando todos sus snacks, primeros, segundos, postres, bebidas y suplementos.
+  - **Maquetación Modular:** Renderiza un Hero de cabecera con doble borde y delega la renderización interactiva del catálogo de platos al componente reutilizable `CardMenu` en un layout de rejilla responsiva de 3 columnas.
+
+#### 14. `App.css` (Boilerplate de Vite)
 * **Ubicación:** `front-end-vinos/src/App.css`
 * **Propósito:** Este archivo contiene las clases y estilos por defecto generados al inicializar la aplicación con Vite (como `.counter`, `.hero`, `#center`, etc.).
 * **Detalle Técnico:** Actualmente **no está siendo utilizado** por ningún componente del catálogo de vinos, ya que el proyecto utiliza una maquetación e identidad visual propia descrita exclusivamente en `index.css`. Se conserva por motivos de compatibilidad de la plantilla base.
