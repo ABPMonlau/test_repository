@@ -164,7 +164,7 @@ export default function Fase1({ comensales, setComensales, fecha, setFecha, turn
       let tables = [];
       try {
         // Consulta si hay mesas disponibles en el backend de Spring Boot
-        tables = await getAvailableTables(finalComensales);
+        tables = await getAvailableTables(finalComensales, turno);
         console.log('Mesas libres encontradas:', tables);
       } catch (error) {
         console.warn('Backend call failed, using mock tables for testing:', error);

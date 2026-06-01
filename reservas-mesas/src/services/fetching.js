@@ -1,18 +1,21 @@
 const back_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
 
 /**
- * Consulta la disponibilidad de mesas para un número de comensales.
- * Llama a GET /buscar/libres en el backend de Spring Boot con el cuerpo JSON esperado.
+ * Consulta la disponibilidad de mesas para un número de comensales y un turno.
+ * Llama a POST /buscar/libres en el backend de Spring Boot.
  */
-export const getAvailableTables = async (comensales) => {
+export const getAvailableTables = async (comensales, turno) => {
   try {
     const response = await fetch(`${back_URL}/buscar/libres`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        guests: comensales
+        guests: comensales,
+        shift: {
+          timeShift: turno === 'cena' ? 'noche' : 'comida'
+        }
       })
     });
     if (!response.ok) {
@@ -44,11 +47,14 @@ export const postClient = async (clientData) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const text = await response.text();
-    try {
-      return JSON.parse(text);
-    } catch {
-      return text; // Puede devolver texto plano "Successfully created"
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    } else {
+      const text = await response.text();
+      // Si el backend devuelve un ID como texto plano, intentamos parsearlo
+      const possibleId = parseInt(text, 10);
+      return !isNaN(possibleId) ? { id: possibleId } : text;
     }
   } catch (error) {
     console.error("Error al registrar el cliente:", error);

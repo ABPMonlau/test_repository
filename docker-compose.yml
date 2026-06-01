@@ -1,0 +1,37 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: reservas_lacanal
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./bbdd/init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD', 'mysqladmin' ,'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+  backend:
+    build: ./book_api
+    container_name: book-api
+    ports:
+      - '8081:8081'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/reservas_lacanal?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+  frontend:
+    build:
+      context: ./reservas-mesas
+      args:
+        - VITE_API_BASE_URL=http://localhost:8081
+    container_name: reservas-front
+    ports:
+      - '80:80'
+    depends_on:
+      - backend

@@ -18,10 +18,10 @@ export default function App() {
 
   // Helper function to map date and turn to turnos database ID
   const getShiftId = (fechaStr, turnoStr) => {
-    if (!fechaStr) return 1;
+    if (!fechaStr) return null;
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const parts = fechaStr.split('-');
-    if (parts.length !== 3) return 1;
+    if (parts.length !== 3) return null;
     const d = new Date(parts[0], parts[1] - 1, parts[2]);
     const dayName = days[d.getDay()];
 
@@ -29,12 +29,10 @@ export default function App() {
     if (dayName === 'Thursday' && turnoStr === 'comida') return 2;
     if (dayName === 'Friday' && turnoStr === 'comida') return 3;
     if (dayName === 'Friday' && turnoStr === 'cena') return 4;
-    if (dayName === 'Saturday' && turnoStr === 'maniana') return 5;
     if (dayName === 'Saturday' && turnoStr === 'comida') return 6;
     if (dayName === 'Saturday' && turnoStr === 'cena') return 7;
-    if (dayName === 'Sunday' && turnoStr === 'maniana') return 8;
     if (dayName === 'Sunday' && turnoStr === 'comida') return 9;
-    return 1;
+    return null;
   };
 
   const handleSubmit = async (e) => {
@@ -47,18 +45,6 @@ export default function App() {
     const formattedTurno = turno === 'comida' ? 'Dinar' : 'Sopar';
     const googleMapsLink = 'https://www.google.com/maps/search/?api=1&query=La+Canal+Restaurant+Carrer+Maria+Vivet+1+08551+Tona';
 
-    const templateParams = {
-      to_email: datosUsuario.email,
-      to_name: datosUsuario.nombre,
-      comensales: comensales,
-      fecha: fecha,
-      turno: formattedTurno,
-      hora: hora,
-      telefono: datosUsuario.telefono,
-      notes: datosUsuario.notasEspeciales || 'Cap',
-      google_maps_link: googleMapsLink,
-    };
-
     try {
       // 1. Registrar al cliente en el backend (POST /agregar/cliente)
       const clientData = {
@@ -68,19 +54,24 @@ export default function App() {
         bookDate: fecha
       };
       
-      let clientId = 1;
-      try {
-        const clientResult = await postClient(clientData);
-        clientId = (clientResult && clientResult.id) ? clientResult.id : 1;
-      } catch (err) {
-        console.warn("No se pudo registrar al cliente en el backend, usando ID de fallback:", err);
+      const clientResult = await postClient(clientData);
+      const clientId = clientResult?.id || clientResult?.clientID || clientResult?.clientID; // Robust extraction
+      
+      if (!clientId) {
+        throw new Error("No s'ha pogut obtenir l'ID del client.");
       }
 
       // 2. Seleccionar la primera mesa disponible
-      const selectedTable = (mesasDisponibles && mesasDisponibles.length > 0) ? mesasDisponibles[0] : { id: 1 };
+      if (!mesasDisponibles || mesasDisponibles.length === 0) {
+        throw new Error("No hi ha taules disponibles.");
+      }
+      const selectedTable = mesasDisponibles[0];
       
       // 3. Obtener el ID del turno correspondiente en la BBDD
       const shiftId = getShiftId(fecha, turno);
+      if (!shiftId) {
+        throw new Error("Torn no vàlid per a aquesta data.");
+      }
 
       // 4. Construir el payload de la reserva esperado por el backend
       const reservationPayload = {
@@ -100,17 +91,24 @@ export default function App() {
       };
 
       // 5. Guardar la reserva en la base de datos de Spring Boot
-      try {
-        await postReservation(reservationPayload);
-      } catch (err) {
-        console.warn("No se pudo guardar la reserva en el backend, procediendo con la confirmación:", err);
-      }
+      await postReservation(reservationPayload);
 
       // 6. Enviar email de confirmación
+      const templateParams = {
+        to_email: datosUsuario.email,
+        to_name: datosUsuario.nombre,
+        comensales: comensales,
+        fecha: fecha,
+        turno: formattedTurno,
+        hora: hora,
+        telefono: datosUsuario.telefono,
+        notes: datosUsuario.notasEspeciales || 'Cap',
+        google_maps_link: googleMapsLink,
+      };
+
       if (serviceId && templateId && publicKey) {
         await emailjs.send(serviceId, templateId, templateParams, publicKey);
         alert('¡Reserva confirmada! S\'ha enviat un email de confirmació.');
-        console.log('Email sent successfully');
       } else {
         console.log('EmailJS keys not configured. Falling back to mailto link.');
         alert('¡Reserva realitzada amb èxit!.');
@@ -118,8 +116,7 @@ export default function App() {
       }
     } catch (error) {
       console.error('Error al procesar la reserva:', error);
-      alert('S\'ha produït un error en desar la reserva o enviar el correu. Si us plau, torna-ho a provar o contacta amb nosaltres.');
-      sendMailtoFallback();
+      alert('S\'ha produït un error en desar la reserva. Si us plau, torna-ho a provar o contacta amb nosaltres.');
     }
 
     function sendMailtoFallback() { // Enviar email manualmente si EmailJS no funciona
