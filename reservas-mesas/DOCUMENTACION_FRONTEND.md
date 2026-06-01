@@ -56,14 +56,17 @@ Esto asegura que nunca se intente crear una reserva para un cliente que aún no 
 
 ```mermaid
 graph TD
-    subgraph App.jsx [Estado Global / Cerebro]
-        S[Estado: comensales, fecha, turno, datosUsuario]
+    subgraph App [App.jsx - El Cerebro]
+        S[(Estado Global)]
+        Orchestrator[handleSubmit]
+        Mapping{getShiftId}
     end
 
-    subgraph Componentes [Interfaz de Usuario]
-        F1[Fase 1: Selector Fecha/Turno]
-        F2[Fase 2: Selector Horario]
-        F3[Fase 3: Formulario Datos]
+    subgraph UI [Componentes de Interfaz]
+        direction TB
+        F1[Fase 1: Fecha y Turno]
+        F2[Fase 2: Selección de Hora]
+        F3[Fase 3: Datos de Cliente]
     end
 
     subgraph ServiceLayer [Servicios API]
@@ -72,16 +75,25 @@ graph TD
         F_Reserva[postReservation]
     end
 
-    F1 -->|Valida y busca| F_Libres
-    F_Libres -->|Retorna mesas| F2
-    F2 -->|Selecciona hora| F3
-    F3 -->|Submit| F_Client
-    F_Client -->|ID de Cliente| F_Reserva
-    F_Reserva -->|Éxito| Email[Confirmación EmailJS]
+    %% Flujo de Navegación y Estado
+    F1 -- "Busca mesas" --> F_Libres
+    F_Libres -- "Actualiza Disponibilidad" --> S
+    S -- "Renderiza según fase" --> UI
 
-    S -.-> F1
-    S -.-> F2
-    S -.-> F3
+    F1 -. "Lifting State" .-> S
+    F2 -. "Lifting State" .-> S
+    F3 -. "Lifting State" .-> S
+
+    %% Flujo de Finalización (Orquestación)
+    F3 -- "Submit Event" --> Orchestrator
+    Orchestrator --> Mapping
+    Orchestrator -- "1. Registrar Cliente" --> F_Client
+    F_Client -- "Retorna ID" --> Orchestrator
+    Orchestrator -- "2. Guardar Reserva" --> F_Reserva
+    F_Reserva -- "Éxito" --> Email[Confirmación EmailJS]
+
+    style App fill:#f9f,stroke:#333,stroke-width:2px
+    style ServiceLayer fill:#bbf,stroke:#333,stroke-width:1px
 ```
 
 ---
