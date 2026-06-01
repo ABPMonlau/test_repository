@@ -40,7 +40,8 @@ front-end-vinos/
 |       └── Footer.jsx      - Componente Footer para toda la web
 ├── public/                 — Archivos estáticos públicos
 ├── docs/
-│   └── react-router.md    — Guía de uso de React Router
+│   ├── react-router.md    — Guía de uso de React Router
+│   └── testing.md         — Guía de testing unitario (Vitest) y E2E (Playwright)
 ├── instrucciones.md        — Guía de instalación y ejecución
 ├── package.json
 ├── vite.config.js
@@ -93,6 +94,7 @@ sequenceDiagram
 | `npm run build` | Genera la build de producción en la carpeta `dist/` |
 | `npm run lint` | Ejecuta ESLint para analizar el código en busca de errores |
 | `npm run preview` | Previsualiza la build de producción localmente |
+| `npm run test` | Ejecuta los tests unitarios de frontend con Vitest |
 
 ### Inicio rápido
 
@@ -115,6 +117,7 @@ npm run dev
 |---|---|
 | [`instrucciones.md`](instrucciones.md) | Guía completa de instalación, configuración y ejecución del proyecto |
 | [`docs/react-router.md`](docs/react-router.md) | Guía de uso y configuración de React Router en este proyecto |
+| [`docs/testing.md`](docs/testing.md) | Guía completa de testing de componentes (Vitest) y pruebas E2E (Playwright) |
 
 ---
 
