@@ -1,66 +1,119 @@
 # ABP Vinos — La Canal
 
-Sistema de gestión para el restaurante **La Canal**, compuesto por un catálogo de vinos, un sistema de reservas y un panel de administración de accesos. Proyecto ABP desarrollado por un equipo de 5 integrantes.
+> **Proyecto ABP** | Ciclo Formativo de Grado Superior — Desarrollo de Aplicaciones Web  
+> Curso 2024–2025
+
+---
+
+## Descripción del Proyecto
+
+**La Canal** es un sistema de gestión integral para un restaurante, desarrollado como proyecto ABP (Aprendizaje Basado en Proyectos) por un equipo de 5 estudiantes.
+
+El sistema permite a los clientes consultar la carta de vinos y menús del restaurante a través de una interfaz web moderna, y realizar reservas de mesa online. Internamente, gestiona la disponibilidad de mesas, los turnos y el registro de clientes mediante una base de datos centralizada.
+
+El proyecto está compuesto por cuatro módulos integrados: una base de datos MariaDB en contenedor Docker, dos APIs REST independientes (una en Python/Flask para el catálogo y otra en Java/Spring Boot para las reservas) y dos frontends en React que consumen cada una de esas APIs.
+
+---
+
+## Integrantes del Equipo
+
+| Nombre | Rol principal |
+|--------|--------------|
+| _(Nombre 1)_ | _(Backend / Frontend / BD…)_ |
+| _(Nombre 2)_ | |
+| _(Nombre 3)_ | |
+| _(Nombre 4)_ | |
+| _(Nombre 5)_ | |
 
 ---
 
 ## Arquitectura del Proyecto
 
 ```
-┌─────────────────────────┐
-│   front-end-vinos       │
-│   (React 19 + Vite 8)   │
-│   Puerto: 5173          │
-└───────────┬─────────────┘
-            │ HTTP (JSON)
-            ▼
-┌─────────────────────────┐
-│   api-vinos             │
-│   (Python + Flask)      │
-│   Puerto: 5000          │
-└───────────┬─────────────┘
-            │ pymysql
-            ▼
-┌─────────────────────────┐
-│   bbdd (MariaDB)        │
-│   Contenedor Docker     │
-│   Puerto: 3306          │
-│                         │
-│  ┌───────────────────┐  │
-│  │  cataleg-vins     │  │
-│  │  (8 tablas)       │  │
-│  └───────────────────┘  │
-│  ┌───────────────────┐  │
-│  │  reservas_lacanal │  │
-│  │  (4 tablas)       │  │
-│  └───────────────────┘  │
-│  ┌───────────────────┐  │
-│  │  usuarios-lacanal │  │
-│  │  (1 tabla)        │  │
-│  └───────────────────┘  │
-│  ┌───────────────────┐  │
-│  │  menus-lacanal    │  │
-│  │  (3 tablas)       │  │
-│  └───────────────────┘  │
-└─────────────────────────┘
+┌─────────────────────────┐   ┌─────────────────────────┐
+│   front-end-vinos       │   │   reservas-mesas         │
+│   (React 19 + Vite 8)   │   │   (React 19 + Vite 8)   │
+│   Puerto: 5173          │   │   Puerto: 5174 (dev)     │
+└───────────┬─────────────┘   └───────────┬─────────────┘
+            │ HTTP/JSON                   │ HTTP/JSON
+            ▼                             ▼
+┌─────────────────────────┐   ┌─────────────────────────┐
+│   api-vinos             │   │   book_api               │
+│   (Python 3 + Flask)    │   │   (Java + Spring Boot)   │
+│   Puerto: 5000          │   │   Puerto: 8081           │
+└───────────┬─────────────┘   └───────────┬─────────────┘
+            │ pymysql                      │ mariadb-java-client
+            └──────────────┬──────────────┘
+                           ▼
+            ┌─────────────────────────┐
+            │   bbdd (MariaDB)        │
+            │   Contenedor Docker     │
+            │   Puerto: 3306          │
+            │                         │
+            │  ┌───────────────────┐  │
+            │  │  cataleg-vins     │  │
+            │  │  (8 tablas)       │  │
+            │  └───────────────────┘  │
+            │  ┌───────────────────┐  │
+            │  │  reservas_lacanal │  │
+            │  │  (4 tablas)       │  │
+            │  └───────────────────┘  │
+            │  ┌───────────────────┐  │
+            │  │  usuarios-lacanal │  │
+            │  │  (1 tabla)        │  │
+            │  └───────────────────┘  │
+            │  ┌───────────────────┐  │
+            │  │  menus-lacanal    │  │
+            │  │  (3 tablas)       │  │
+            │  └───────────────────┘  │
+            └─────────────────────────┘
 ```
 
 ---
 
-## Componentes
+## Componentes y Tecnologías
 
 | Componente | Tecnología | Puerto | Descripción |
 |------------|-----------|--------|-------------|
 | **bbdd** | MariaDB (Docker) | 3306 | Base de datos unificada con cuatro esquemas |
-| **api-vinos** | Python 3 + Flask | 5000 | API REST para el catálogo de vinos |
-| **front-end-vinos** | React 19 + Vite 8 | 5173 | Interfaz web del catálogo |
+| **api-vinos** | Python 3 + Flask + PyMySQL | 5000 | API REST para el catálogo de vinos y menús |
+| **book_api** | Java 21 + Spring Boot + JDBC | 8081 | API REST para la gestión de reservas de mesa |
+| **front-end-vinos** | React 19 + Vite 8 + Tailwind CSS | 5173 | Interfaz pública: carta de vinos y menús |
+| **reservas-mesas** | React 19 + Vite 8 + Flatpickr | — | Formulario de reserva de mesas en 3 pasos |
+
+---
+
+## Endpoints de las APIs
+
+### `api-vinos` — Flask (Puerto 5000)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/vinos` | Devuelve el listado completo de vinos con datos relacionados (tipo, bodega, cosecha, formato y copa) |
+
+---
+
+### `book_api` — Spring Boot (Puerto 8081)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/buscar/libres` | Consulta las mesas disponibles para un número de comensales y turno dado |
+| `POST` | `/agregar/cliente` | Registra un nuevo cliente en el sistema |
+| `POST` | `/reservar` | Crea una reserva asociando un cliente, una mesa y un turno |
+| `GET` | `/cancelar/{id}` | Cancela una reserva existente por su ID y libera la mesa |
+
+> **Captura de IntelliJ — Vista de endpoints (HTTP Client / Spring Endpoints):**
+>
+> _(Añadir aquí una captura de pantalla de IntelliJ mostrando los endpoints del proyecto)_
+>
+> ![Endpoints IntelliJ](docs/img/endpoints-intellij.png)
 
 ---
 
 ## Inicio Rápido
 
 > [!IMPORTANT]
-> Los servicios deben arrancarse en este orden: primero la base de datos, luego la API y finalmente el frontend.
+> Los servicios deben arrancarse en este orden: primero la base de datos, luego las APIs y finalmente los frontends.
 
 ### 1. Levantar la base de datos
 
@@ -75,7 +128,7 @@ Verifica que el contenedor `db-la-canal` está activo:
 docker ps
 ```
 
-### 2. Arrancar la API
+### 2. Arrancar la API de vinos (Flask)
 
 ```bash
 cd api-vinos
@@ -91,19 +144,32 @@ python app.py
 
 La API quedará disponible en `http://127.0.0.1:5000`
 
-### 3. Arrancar el frontend
+### 3. Arrancar la API de reservas (Spring Boot)
+
+```bash
+cd book_api
+./mvnw spring-boot:run
+```
+
+La API quedará disponible en `http://localhost:8081`
+
+### 4. Arrancar el frontend del catálogo
 
 ```bash
 cd front-end-vinos
-
-# Solo la primera vez
 npm install
-
-# Arrancar el servidor de desarrollo
 npm run dev
 ```
 
 La aplicación estará disponible en `http://localhost:5173`
+
+### 5. Arrancar el frontend de reservas
+
+```bash
+cd reservas-mesas
+npm install
+npm run dev
+```
 
 ---
 
@@ -130,19 +196,23 @@ test_repository/
 │   └── init-scripts/
 │       ├── 01-databases-y-usuarios.sql   # Crea las 4 BD y usuarios
 │       ├── 02-schema-vinos.sql           # Esquema de la BD de vinos
-│       ├── 03-data-vinos.sql             # Datos de catálogo de vinos
-│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas (con turnos)
+│       ├── 03-data-vinos.sql             # Datos del catálogo de vinos
+│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas
 │       ├── 05-schema-users.sql           # Esquema y admin inicial de accesos
-│       └── 06-schema-menus.sql           # Esquema y datos de menus
-├── api-vinos/                         # API REST (Flask)
+│       └── 06-schema-menus.sql           # Esquema y datos de menús
+├── api-vinos/                         # API REST del catálogo (Flask)
 │   ├── README.md
 │   ├── app.py
 │   ├── controller/
 │   └── database/
-├── front-end-vinos/                   # Frontend (React + Vite)
+├── book_api/                          # API REST de reservas (Spring Boot)
+│   ├── pom.xml
+│   └── src/
+├── front-end-vinos/                   # Frontend catálogo (React + Vite)
 │   ├── README.md
 │   ├── instrucciones.md
-│   ├── docs/react-router.md
+│   └── src/
+├── reservas-mesas/                    # Frontend reservas (React + Vite)
 │   └── src/
 └── docs/                              # Documentación global
     ├── documentacion-bbdd-vinos.md
@@ -160,8 +230,8 @@ test_repository/
 | Archivo | Descripción |
 |---------|-------------|
 | [bbdd/instrucciones.md](bbdd/instrucciones.md) | Guía de levantamiento de la BD unificada |
-| [api-vinos/README.md](api-vinos/README.md) | Documentación técnica completa de la API |
-| [front-end-vinos/README.md](front-end-vinos/README.md) | Documentación del frontend |
+| [api-vinos/README.md](api-vinos/README.md) | Documentación técnica completa de la API de vinos |
+| [front-end-vinos/README.md](front-end-vinos/README.md) | Documentación del frontend del catálogo |
 | [front-end-vinos/instrucciones.md](front-end-vinos/instrucciones.md) | Guía de inicio del frontend |
 | [front-end-vinos/docs/react-router.md](front-end-vinos/docs/react-router.md) | Guía de uso de React Router |
 | [docs/frontend-architecture.md](docs/frontend-architecture.md) | Arquitectura y estructura detallada del frontend |
@@ -197,9 +267,9 @@ test_repository/
 ### Dependencias
 
 - **Python** (api-vinos): Documentar en el README o crear un `requirements.txt`.
-- **Node.js** (front-end-vinos): Se gestionan con `package.json` + `npm install`.
+- **Node.js** (front-end-vinos, reservas-mesas): Se gestionan con `package.json` + `npm install`.
+- **Java** (book_api): Gestionadas con Maven (`pom.xml`).
 - **Docker** (bbdd): No requiere instalación adicional de dependencias.
 
 > [!WARNING]
 > No subir al repositorio: `.venv/`, `node_modules/`, `__pycache__/`, archivos `.pyc`, `.env`, ni `dist/`. Revisa el [.gitignore](docs/git-ignore-explanations.md) para más detalles.
-
