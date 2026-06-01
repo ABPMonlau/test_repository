@@ -1,7 +1,6 @@
 package com.book_api.controller;
 
 import com.book_api.model.enums.bookStates;
-import com.book_api.model.enums.timeShiftStates;
 
 import com.book_api.model.classes.books;
 import com.book_api.dao.booksDAO.bookDAO;
@@ -78,7 +77,13 @@ public class reserveController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        tableDAO.setDeactive(b.getTable().getId());
+        int tRows = tableDAO.setDeactive(b.getTable().getId());
+
+        if (tRows == 0) {
+            System.out.println("Error deactivating table!");
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         System.out.println("Done!");
 
@@ -94,7 +99,6 @@ public class reserveController {
         if (b == null || b.getTable() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         int tID = b.getTable().getId();
-
         int bRows = bookDAO.cancelReserve(id);
 
         if (bRows == 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -108,7 +112,7 @@ public class reserveController {
         return new ResponseEntity<>("Successfully Cancelled", HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/buscar/libres/{num}{shift}")
+    @GetMapping("/buscar/libres/{num}/{shift}")
     public ResponseEntity<?> checkReserve(@PathVariable int num, @PathVariable String shift) {
         System.out.print("Checking for tables...");
 

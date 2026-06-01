@@ -2,8 +2,6 @@ package com.book_api.dao.tablesDAO;
 
 import com.book_api.model.classes.tables;
 
-import com.book_api.model.enums.timeShiftStates;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +18,9 @@ public class tableDAOImpl implements tableDAO {
     public List<tables> getAllTables() {
         String query = "SELECT * FROM mesas";
 
-        return jdbc.query(query, rowMapper);
+        List<tables> t = jdbc.query(query, rowMapper);
+
+        return (t.isEmpty()) ? null : t;
     }
 
     @Override
@@ -29,7 +29,9 @@ public class tableDAOImpl implements tableDAO {
 
         int tssi = (tss.equals("maniana")) ? 1 : (tss.equals("comida")) ? 2 : 3;
 
-        return jdbc.query(query, rowMapper, guests, guests, tssi);
+        List<tables> t = jdbc.query(query, rowMapper, guests, guests, tssi);
+
+        return (t.isEmpty()) ? null : t;
     }
 
     @Override

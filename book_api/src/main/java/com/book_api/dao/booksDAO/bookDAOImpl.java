@@ -18,7 +18,9 @@ public class bookDAOImpl implements bookDAO {
     public List<books> getAllReserves() {
         String query = "SELECT * FROM reservas";
 
-        return jdbcTemplate.query(query, rowMapper);
+        List<books> b = jdbcTemplate.query(query, rowMapper);
+
+        return (b.isEmpty()) ? null : b;
     }
 
     @Override

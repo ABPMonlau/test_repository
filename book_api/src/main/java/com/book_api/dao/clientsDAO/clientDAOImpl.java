@@ -19,7 +19,9 @@ public class clientDAOImpl implements clientDAO {
     public List<clients> getAllClients() {
         String query = "SELECT * FROM clientes";
 
-        return jdbcTemplate.query(query, rowMapper);
+        List<clients> c = jdbcTemplate.query(query, rowMapper);
+
+        return (c.isEmpty()) ? null : c;
     }
 
     @Override
