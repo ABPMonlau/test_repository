@@ -123,53 +123,103 @@ La aplicación estará disponible en `http://localhost:5173`
 
 ```text
 test_repository/
-├── README.md                          ← Este archivo
-├── bbdd/                              # Base de datos unificada
-│   ├── docker-compose.yaml
-│   ├── instrucciones.md
-│   └── init-scripts/
-│       ├── 01-databases-y-usuarios.sql   # Crea las 4 BD y usuarios
-│       ├── 02-schema-vinos.sql           # Esquema de la BD de vinos
-│       ├── 03-data-vinos.sql             # Datos de catálogo de vinos
-│       ├── 04-schema-reservas.sql        # Esquema y datos de reservas (con turnos)
-│       ├── 05-schema-users.sql           # Esquema y admin inicial de accesos
-│       └── 06-schema-menus.sql           # Esquema y datos de menus
-├── api-vinos/                         # API REST (Flask)
-│   ├── README.md
-│   ├── app.py
-│   ├── controller/
-│   └── database/
-├── front-end-vinos/                   # Frontend (React + Vite)
-│   ├── README.md
-│   ├── instrucciones.md
-│   ├── docs/react-router.md
+├── README.md                          ← Este archivo de bienvenida
+├── bbdd/                              # Base de datos unificada (MariaDB)
+│   ├── docker-compose.yaml            # Orquestador del contenedor db-la-canal
+│   ├── bbdd-reservas/                 # Persistencia e inicialización de turnos
+│   │   └── init-scripts/
+│   │       └── turnos.sql             # Datos de turnos de Reservas
+│   └── init-scripts/                  # Scripts SQL de inicialización en orden de ejecución
+│       ├── 01-databases-y-usuarios.sql   # Crea esquemas de base de datos y accesos
+│       ├── 02-schema-vinos.sql           # Tablas de catálogo de vinos y bodegas
+│       ├── 03-data-vinos.sql             # Importación de vinos iniciales
+│       ├── 04-schema-reservas.sql        # Tablas de clientes, mesas y reservas
+│       ├── 05-schema-turnos.sql          # Tablas de turnos horarios
+│       ├── 05-schema-users.sql           # Credenciales y control de acceso inicial
+│       └── 06-schema-menus.sql           # Platos, menús y precios del restaurante
+├── api-vinos/                         # API REST de Catálogo de Vinos (Python 3 + Flask)
+│   ├── app.py                         # Punto de entrada de la API REST (Flask)
+│   ├── controller/                    # Lógica de controladores y ruteo
+│   │   └── controller.py
+│   ├── database/                      # Conexión a MariaDB mediante PyMySQL
+│   │   └── connection.py
+│   └── tests/                         # Pruebas automatizadas del backend
+│       ├── __init__.py
+│       └── test_controller.py         # Tests unitarios del controlador con Mocks (pytest)
+├── front-end-vinos/                   # Frontend Web (React 19 + Vite 8 + CSS)
+│   ├── package.json                   # Dependencias y scripts NPM (Vitest/Playwright)
+│   ├── vite.config.js                 # Configuración de bundler Vite y Vitest (jsdom)
+│   ├── playwright.config.js           # Orquestación y configuración de tests E2E
+│   ├── index.html                     # Plantilla HTML raíz del cliente web
+│   ├── tests-e2e/                     # Pruebas End-to-End
+│   │   └── vinos_flow.spec.js         # Test Playwright de navegación y API Mocking
+│   ├── proto/                         # Prototipos y maquetas en desarrollo
+│   │   └── pagina_menu/
+│   │       └── menu.md                # Maquetación prototipo de menús
+│   └── src/                           # Código fuente de React
+│       ├── main.jsx                   # Entrada de inicialización de la SPA
+│       ├── App.jsx                    # Enrutador principal y diseño de layouts
+│       ├── setupTests.js              # Configuración global de matchers de HTML (Vitest)
+│       ├── index.css                  # Estilos globales y variables de diseño CSS
+│       └── components/                # Componentes web modulares y reutilizables
+│           ├── CardMenu.jsx           # Renderizador de tarjetas de menús
+│           ├── CardVino.jsx           # Renderizador de tarjetas de vinos
+│           ├── CardVino.test.jsx      # Test unitario del componente CardVino (RTL)
+│           ├── Footer.jsx             # Pie de página transversal
+│           ├── Hero.jsx               # Panel de bienvenida editorial
+│           ├── HeroImageCard.jsx      # Carrusel visual de la landing page
+│           ├── ListaVinos.jsx         # Agrupación y filtrado de la bodega
+│           └── NavBar.jsx             # Barra de navegación receptiva
+├── book_api/                          # API REST de Reservas (Java + Spring Boot 3)
+│   ├── pom.xml                        # Descriptor del proyecto Maven y dependencias
+│   ├── Dockerfile                     # Receta de compilación y empaquetado del contenedor
+│   ├── mvnw / mvnw.cmd                # Envoltorio ejecutable de Maven (wrapper)
 │   └── src/
-└── docs/                              # Documentación global
-    ├── documentacion-bbdd-vinos.md
-    ├── documentacion-bbdd-reservas.md
-    ├── documentacion-bbdd-usuarios.md
-    ├── documentacion-bbdd-menus.md
-    ├── frontend-architecture.md
-    └── git-ignore-explanations.md
+│       ├── main/                      # Código productivo del backend
+│       │   ├── java/com/lacanal/book_api/
+│       │   │   ├── BookApiApplication.java # Inicializador de Spring Boot
+│       │   │   ├── controllers/       # Endpoints REST de reservas
+│       │   │   ├── dao/               # Interfaces y lógica SQL con JdbcTemplate
+│       │   │   ├── models/            # Clases de dominio POJO (Cliente, Mesa, Reserva, etc.)
+│       │   │   └── mappers/           # RowMappers para conversión ResultSet-POJO
+│       │   └── resources/
+│       │       └── application.properties # Parámetros del servidor y BBDD
+│       └── test/                      # Batería de pruebas automatizadas en Java
+│           └── java/com/lacanal/book_api/
+│               └── BookApiApplicationTests.java # Tests unitarios de Spring Context
+└── docs/                              # Centro Unificado de Documentación
+    ├── README.md                      ← Mapa de Navegación del centro de docs
+    ├── bbdd/                          # Manuales de persistencia y esquemas SQL
+    ├── front-end-vinos/               # Arquitectura visual, manuales y testing
+    ├── api-vinos/                     # Documentación de la API de Vinos
+    ├── book_api/                      # Arquitectura y manual del backend de Reservas
+    └── general/                       # Políticas de testing, Git y uso de agentes
 ```
 
 ---
 
 ## Índice de Documentación
 
-| Archivo | Descripción |
-|---------|-------------|
-| [bbdd/instrucciones.md](bbdd/instrucciones.md) | Guía de levantamiento de la BD unificada |
-| [api-vinos/README.md](api-vinos/README.md) | Documentación técnica completa de la API |
-| [front-end-vinos/README.md](front-end-vinos/README.md) | Documentación del frontend |
-| [front-end-vinos/instrucciones.md](front-end-vinos/instrucciones.md) | Guía de inicio del frontend |
-| [front-end-vinos/docs/react-router.md](front-end-vinos/docs/react-router.md) | Guía de uso de React Router |
-| [docs/frontend-architecture.md](docs/frontend-architecture.md) | Arquitectura y estructura detallada del frontend |
-| [docs/documentacion-bbdd-vinos.md](docs/documentacion-bbdd-vinos.md) | Esquema detallado de `cataleg-vins` |
-| [docs/documentacion-bbdd-reservas.md](docs/documentacion-bbdd-reservas.md) | Esquema detallado de `reservas_lacanal` |
-| [docs/documentacion-bbdd-usuarios.md](docs/documentacion-bbdd-usuarios.md) | Esquema detallado de `usuarios-lacanal` |
-| [docs/documentacion-bbdd-menus.md](docs/documentacion-bbdd-menus.md) | Esquema detallado de `menus-lacanal` |
-| [docs/git-ignore-explanations.md](docs/git-ignore-explanations.md) | Explicación de reglas del `.gitignore` |
+| Archivo / Ruta | Descripción |
+|----------------|-------------|
+| [docs/README.md](docs/README.md) | 🗺️ Mapa de navegación principal de la documentación |
+| [docs/bbdd/instrucciones.md](docs/bbdd/instrucciones.md) | 🐳 Guía de despliegue y comandos Docker de MariaDB |
+| [docs/bbdd/documentacion-bbdd-vinos.md](docs/bbdd/documentacion-bbdd-vinos.md) | 🍷 Esquema detallado de la BBDD `cataleg-vins` |
+| [docs/bbdd/documentacion-bbdd-reservas.md](docs/bbdd/documentacion-bbdd-reservas.md) | 📋 Esquema detallado de la BBDD `reservas_lacanal` |
+| [docs/bbdd/documentacion-bbdd-usuarios.md](docs/bbdd/documentacion-bbdd-usuarios.md) | 👤 Esquema detallado de la BBDD `usuarios-lacanal` |
+| [docs/bbdd/documentacion-bbdd-menus.md](docs/bbdd/documentacion-bbdd-menus.md) | 🍔 Esquema detallado de la BBDD `menus-lacanal` |
+| [docs/front-end-vinos/README.md](docs/front-end-vinos/README.md) | 💻 Documentación principal e instrucciones del Frontend |
+| [docs/front-end-vinos/instrucciones.md](docs/front-end-vinos/instrucciones.md) | ⚡ Guía de inicio y comandos Vite para el frontend |
+| [docs/front-end-vinos/frontend-architecture.md](docs/front-end-vinos/frontend-architecture.md) | 📐 Arquitectura detallada, modularidad y estilos del cliente |
+| [docs/front-end-vinos/testing.md](docs/front-end-vinos/testing.md) | 🧪 Guía de Testing del Frontend (Vitest + Playwright + API Mocking) |
+| [docs/api-vinos/README.md](docs/api-vinos/README.md) | 🐍 Documentación y endpoints del catálogo de vinos (Python + Flask) |
+| [docs/api-vinos/documentacion-lista-vinos.md](docs/api-vinos/documentacion-lista-vinos.md) | 🍷 Flujo de datos y llamadas de red de vinos |
+| [docs/book_api/README.md](docs/book_api/README.md) | ☕ Documentación principal y endpoints de Reservas (Spring Boot) |
+| [docs/book_api/documentacion-book-api.md](docs/book_api/documentacion-book-api.md) | 📅 Análisis arquitectónico y reglas de aforo de mesas |
+| [docs/general/uso_de_agentes.md](docs/general/uso_de_agentes.md) | 🤖 Directrices del flujo de desarrollo asistido con agentes AI |
+| [docs/general/git-ignore-explanations.md](docs/general/git-ignore-explanations.md) | 🚫 Explicación de políticas y reglas del archivo `.gitignore` |
+| [docs/general/guia-testing.md](docs/general/guia-testing.md) | 🧪 Guía técnica transversal de testing y pirámide de pruebas |
+| [docs/general/informe_testing_git_uml.md](docs/general/informe_testing_git_uml.md) | 📄 Informe de Ingeniería: Gestión de Configuración, Testing y UML (Mermaid) |
 
 ---
 
@@ -201,5 +251,5 @@ test_repository/
 - **Docker** (bbdd): No requiere instalación adicional de dependencias.
 
 > [!WARNING]
-> No subir al repositorio: `.venv/`, `node_modules/`, `__pycache__/`, archivos `.pyc`, `.env`, ni `dist/`. Revisa el [.gitignore](docs/git-ignore-explanations.md) para más detalles.
+> No subir al repositorio: `.venv/`, `node_modules/`, `__pycache__/`, archivos `.pyc`, `.env`, ni `dist/`. Revisa el [.gitignore](docs/general/git-ignore-explanations.md) para más detalles.
 

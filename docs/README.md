@@ -24,7 +24,7 @@ docs/
 ├── front-end-vinos/                   # Frontend Web (React + Vite)
 │   ├── README.md                      # Instrucciones de inicio del Frontend
 │   ├── instrucciones.md               # Guía de instalación y comandos Vite
-│   ├── react-router.md                # Configuración detallada de rutas en React
+│   ├── testing.md                     # Guía de Testing del Frontend (Vitest + Playwright)
 │   └── frontend-architecture.md       # Arquitectura, componentes y estilos
 │
 ├── api-vinos/                         # API de Catálogo de Vinos (Python)
@@ -39,7 +39,8 @@ docs/
 └── general/                           # Políticas globales y Guías transversales
     ├── uso_de_agentes.md              # Flujo y directrices de desarrollo con agentes
     ├── git-ignore-explanations.md     # Explicación de políticas del .gitignore
-    └── guia-testing.md                # Guía y políticas de pruebas automatizadas
+    ├── guia-testing.md                # Guía y políticas de pruebas automatizadas
+    └── informe_testing_git_uml.md     # Informe de testing, Git y diagramas UML
 ```
 
 ---
@@ -55,8 +56,8 @@ docs/
 
 ### 💻 2. Frontend de Vinos (`front-end-vinos/`)
 * ⚡ **[Guía Rápida de Despliegue](./front-end-vinos/instrucciones.md):** Comandos `npm` para levantar el entorno de desarrollo y generar el bundle de producción con Vite.
-* 🗺️ **[Arquitectura de Rutas](./front-end-vinos/react-router.md):** Configuración de navegación del lado del cliente usando React Router.
 * 📐 **[Diseño y Estilo](./front-end-vinos/frontend-architecture.md):** Especificación del sistema de componentes, modularidad y políticas de maquetación CSS del frontend.
+* 🧪 **[Guía de Testing del Frontend](./front-end-vinos/testing.md):** Explicación y ejecución de pruebas unitarias con Vitest y pruebas E2E con Playwright utilizando API Mocking.
 
 ### 🐍 3. API Vinos - Python (`api-vinos/`)
 * 🍷 **[Endpoints y Flujo](./api-vinos/documentacion-lista-vinos.md):** Detalle de los servicios web REST encargados de consultar, filtrar y devolver el catálogo completo de vinos.
@@ -68,3 +69,4 @@ docs/
 * 🤖 **[Uso de Agentes AI](./general/uso_de_agentes.md):** Directrices y flujo de trabajo al interactuar con asistentes de codificación en el repositorio.
 * 🚫 **[Manual del .gitignore](./general/git-ignore-explanations.md):** Explicación detallada de qué archivos se excluyen del repositorio de Git y por qué.
 * 🧪 **[Manual de Pruebas](./general/guia-testing.md):** Pautas para el desarrollo de pruebas unitarias y de integración de software.
+* 📄 **[Informe de Ingeniería: Git, Testing y UML](./general/informe_testing_git_uml.md):** Memoria técnica de la gestión de configuración (Git), aseguramiento de la calidad (testing) y modelado Mermaid.
