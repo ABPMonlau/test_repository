@@ -19,11 +19,11 @@ El proyecto está compuesto por cuatro módulos integrados: una base de datos Ma
 
 | Nombre | Rol principal |
 |--------|--------------|
-| _(Nombre 1)_ | _(Backend / Frontend / BD…)_ |
-| _(Nombre 2)_ | |
-| _(Nombre 3)_ | |
-| _(Nombre 4)_ | |
-| _(Nombre 5)_ | |
+| Yangpeng Ni | BBDD |
+| Pol Hernandez Blanco | Front-end, API, BBDD |
+| Ricard Martinez Armesto | Front-end |
+| Julen Rejas Lopez | Sistemas y servidor |
+| Victor Iniesta Romera | Backend/API |
 
 ---
 
@@ -104,7 +104,7 @@ El proyecto está compuesto por cuatro módulos integrados: una base de datos Ma
 
 > **Captura de IntelliJ — Vista de endpoints (HTTP Client / Spring Endpoints):**
 >
-> _(Añadir aquí una captura de pantalla de IntelliJ mostrando los endpoints del proyecto)_
+> 
 >
 > ![Endpoints IntelliJ](docs/img/endpoints-intellij.png)
 
