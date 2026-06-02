@@ -6,15 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Date;
 import java.sql.Time;
 
-@Setter
-@Getter
 @Entity
 @Table("reservas")
 public class books {
@@ -27,15 +23,15 @@ public class books {
     private bookStates state;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente") //Possible error
+    @JoinColumn(name = "id_cliente")
     private clients client;
 
     @ManyToOne
-    @JoinColumn(name = "id_mesa")  //Possible error
+    @JoinColumn(name = "id_mesa")
     private tables table;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id_turno")
     private shifts shift;
 
     public books() {}
@@ -45,7 +41,7 @@ public class books {
     }
 
     public void setId(int id) {
-        this.bookID = id;
+        bookID = id;
     }
 
     public shifts getShift() {

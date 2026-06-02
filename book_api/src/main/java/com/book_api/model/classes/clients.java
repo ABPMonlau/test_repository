@@ -1,11 +1,7 @@
 package com.book_api.model.classes;
 
-import com.book_api.model.exceptions.clientException;
-
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Date;

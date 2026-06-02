@@ -8,7 +8,7 @@ import java.util.List;
 public interface tableDAO {
     List<tables> getAllTables();
 
-    List<tables> getAvaliableTables(int guests, timeShiftStates tss);
+    List<tables> getAvaliableTables(int guests, String tss);
 
     tables getTable(int id);
 

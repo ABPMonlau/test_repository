@@ -15,13 +15,6 @@ public class shiftDAOImpl implements shiftDAO {
     private static final shiftRowMapper rowMapper = new shiftRowMapper();
 
     @Override
-    public List<shifts> getAllShifts() {
-        String query = "SELECT * FROM turnos";
-
-        return jdbcTemplate.query(query, rowMapper);
-    }
-
-    @Override
     public shifts getShiftById(int id) {
         String query = "SELECT * FROM turnos WHERE id_turno = ?";
 

@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.sql.Date;
 import java.sql.Time;
 
 @Entity
@@ -19,27 +18,22 @@ public class shifts {
     private dayShiftStates dayShift;
     private timeShiftStates timeShift;
 
-    private Date date;
     private Time startHour;
     private Time endHour;
     private int maxBooks;
 
     public shifts() {}
 
-    public boolean isTableAvailable(tables t) {
-        return t.isAvaliable();
-    }
-
     public int getId() {
         return shiftID;
     }
 
     public void setId(int id) {
-        this.shiftID = id;
+        shiftID = id;
     }
 
     public void setDayShift(dayShiftStates shift) {
-        this.dayShift = shift;
+        dayShift = shift;
     }
 
     public dayShiftStates getDayShift() {
@@ -47,39 +41,31 @@ public class shifts {
     }
 
     public void setTimeShift(timeShiftStates shift) {
-        this.timeShift = shift;
+        timeShift = shift;
     }
 
     public String getTimeShift() {
         return timeShift.name();
     }
 
-    public void setStartHour(Time startHour) {
-        this.startHour = startHour;
+    public void setStartHour(Time hour) {
+        startHour = hour;
     }
 
     public Time getStartHour() {
         return startHour;
     }
 
-    public void setEndHour(Time endHour) {
-        this.endHour = endHour;
+    public void setEndHour(Time hour) {
+        endHour = hour;
     }
 
     public Time getEndHour() {
         return endHour;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setMaxBooks(int maxBooks) {
-        this.maxBooks = maxBooks;
+    public void setMaxBooks(int max) {
+        maxBooks = max;
     }
 
     public int getMaxBooks() {

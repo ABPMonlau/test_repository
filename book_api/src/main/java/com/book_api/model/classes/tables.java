@@ -18,22 +18,6 @@ public class tables {
 
     public tables() {}
 
-    public boolean isAvaliable() {
-        return (state == tableStates.FREE);
-    }
-
-    public boolean canSeat(int guests) {
-        return (capacity >= guests);
-    }
-
-    public void disable() {
-        state = tableStates.BOOKED;
-    }
-
-    public void enable() {
-        state = tableStates.FREE;
-    }
-
     public void setId(int id) {
         this.tableID = id;
     }
