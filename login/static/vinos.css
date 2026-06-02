@@ -45,16 +45,13 @@ th {
     font-weight: 600;
     text-transform: uppercase;
     background-color: #F3EFE9;
-
     /* MAGIA PARA CABECERA FIJA */
     position: sticky;
     top: 0;
     z-index: 10;
     /* Evita que el texto de abajo se monte encima al hacer scroll */
     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.2);
-    /* Sombrita elegante para separar */
 }
-
 
 /* BOTONES CRUD */
 .btn {
@@ -114,9 +111,7 @@ textarea {
 /* NOTIFICACIONES FLASH */
 .alert-success {
     background-color: #EBF2ED;
-    /* Verde muy clarito y elegante */
     color: #2F4F2F;
-    /* Verde oscuro para el texto */
     border: 1px solid #C5DAC9;
     padding: 15px 20px;
     margin: 20px auto;
@@ -125,7 +120,6 @@ textarea {
     font-style: italic;
     text-align: center;
 }
-
 
 /* --- ESTILOS DEL BUSCADOR EN TIEMPO REAL --- */
 .search-container {
@@ -147,4 +141,93 @@ textarea {
 
 .search-input:focus {
     border-color: #59544B;
+}
+
+/* =======================================================
+   📱 ADAPTACIÓN AGRESIVA PARA MÓVILES Y TABLETS
+   ======================================================= */
+
+@media screen and (max-width: 768px) {
+
+    /* 1. Ajuste general del cuerpo */
+    body {
+        padding: 15px !important;
+    }
+
+    h1 {
+        font-size: 1.8rem !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* 2. Botones Superiores (Volver / Añadir) */
+    div[style*="text-align: center"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+        margin-bottom: 25px !important;
+    }
+
+    .btn {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        font-size: 16px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+
+    /* 3. Buscador a pantalla completa */
+    .search-input {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* 4. Arreglo del Formulario (NUEVO VINO) */
+    .form-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px 10px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 12px !important;
+        margin-bottom: 15px !important;
+        box-sizing: border-box !important;
+    }
+
+    .form-container div[style*="margin-top"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .form-container div[style*="margin-top"] button,
+    .form-container div[style*="margin-top"] a {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* 5. Tabla de Vinos (Scroll lateral) */
+    .contenedor-tabla {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        border: 1px solid var(--bordes);
+    }
+
+    table {
+        min-width: 650px !important;
+        margin: 0 !important;
+    }
 }

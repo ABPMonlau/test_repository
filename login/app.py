@@ -5,28 +5,28 @@ import hashlib
 import os
 from dotenv import load_dotenv
 
-# Importamos el módulo de vinos
+# importar vinos
 from vinos import vinos_bp
 
-load_dotenv()
-app = Flask(__name__)
-app.secret_key = "clave_super_secreta_para_la_canal"
+load_dotenv()  # cargar .env
+app = Flask(__name__)  # crear app web
+app.secret_key = "clave_super_secreta_para_la_canal"  # cifrar la sesion
 
-# Registramos las rutas de los vinos
+# registrar rutas vinos a app principal
 app.register_blueprint(vinos_bp)
 
 
-# --- CONEXIÓN A LA BASE DE DATOS DE USUARIOS (CRM) ---
+# connexion a la base de datos usando parametros  del env
 def get_users_db():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME"),  # Apunta a usuarios-lacanal
+        database=os.getenv("DB_NAME"),
     )
 
 
-# --- EL PORTERO DE SEGURIDAD (Decorador) ---
+# decorador / portero,
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -38,7 +38,7 @@ def login_required(f):
     return decorated_function
 
 
-# --- RUTAS PRINCIPALES ---
+# rutas principales
 
 
 @app.route("/")
@@ -48,7 +48,7 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # Si ya tiene la sesión abierta, lo mandamos directo al dashboard
+    # si tiene sesion abierta mandamos al loguin
     if "logueado" in session:
         return redirect(url_for("dashboard"))
 
@@ -56,24 +56,24 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        # Encriptamos la contraseña introducida para compararla con la base de datos
+        # hashear para comparar
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
         db = get_users_db()
-        cursor = db.cursor(dictionary=True)
+        cursor = db.cursor(dictionary=True)  # para que el cursor use diccionarios
 
-        # CORREGIDO: Buscamos en la tabla 'users' y en la columna 'password_hash'
+        # cursor = como un mandado
         cursor.execute(
             "SELECT * FROM users WHERE username = %s AND password_hash = %s",
             (username, hashed_password),
         )
-        user = cursor.fetchone()
+        user = cursor.fetchone()  # coje solo uno el primero
 
         cursor.close()
         db.close()
 
         if user:
-            # ¡LE DAMOS LA PULSERA VIP!
+
             session["logueado"] = True
             session["username"] = username
             return redirect(url_for("dashboard"))
@@ -83,20 +83,21 @@ def login():
     return render_template("login.html")
 
 
+# ruta registrar
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
 
-        # Encriptamos la contraseña antes de guardarla
+        # hashear contraseña antes de guardarla
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
         db = get_users_db()
         cursor = db.cursor()
 
         try:
-            # CORREGIDO: Insertamos en la tabla 'users' y en la columna 'password_hash'
+            # insertar usuario
             cursor.execute(
                 "INSERT INTO users (username, password_hash) VALUES (%s, %s)",
                 (username, hashed_password),
@@ -105,7 +106,7 @@ def register():
             flash("Cuenta creada con éxito. Ahora puedes iniciar sesión.", "success")
             return redirect(url_for("login"))
         except mysql.connector.IntegrityError:
-            # Si el username es UNIQUE en tu base de datos y ya existe, saltará este error
+            # si el username ya esta cogif
             flash("Ese nombre de usuario ya está en uso. Elige otro.", "error")
         finally:
             cursor.close()
@@ -116,12 +117,12 @@ def register():
 
 @app.route("/logout")
 def logout():
-    session.clear()  # Cortamos la pulsera de seguridad
+    session.clear()  # parar session
     return redirect(url_for("login"))
 
 
 @app.route("/dashboard")
-@login_required  # Ruta protegida por el portero
+@login_required  # ruta protegida
 def dashboard():
     return render_template("dashboard.html", username=session.get("username"))
 

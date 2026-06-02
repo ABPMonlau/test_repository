@@ -6,10 +6,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-vinos_bp = Blueprint("vinos", __name__)
+vinos_bp = Blueprint("vinos", __name__)  # modulo independiente
 
 
-# --- EL PORTERO (Copia local para evitar dependencias circulares) ---
+# portero copia local para evitar
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -21,10 +21,10 @@ def login_required(f):
     return decorated_function
 
 
-# --- CONFIGURACIÓN DEL POOL DE CONEXIONES ---
+# configuración pool de connexiones,
 db_pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="piscina_vinos",
-    pool_size=5,
+    pool_size=5,  # maximo 5 connexiones a la vez
     pool_reset_session=True,
     host=os.getenv("DB_HOST"),
     user=os.getenv("DB_VINOS_USER"),
@@ -34,15 +34,15 @@ db_pool = mysql.connector.pooling.MySQLConnectionPool(
 
 
 def get_vinos_db():
-    db = db_pool.get_connection()
+    db = db_pool.get_connection()  # coge un pool
     try:
-        db.ping(reconnect=True, attempts=3, delay=1)
+        db.ping(reconnect=True, attempts=3, delay=1)  # comprueba que sigue connextado
     except:
         pass
     return db
 
 
-# --- 1. LEER: Mostrar todos los vinos ---
+# mostrat todos los vinos
 @vinos_bp.route("/vinos")
 @login_required
 def lista_vinos():
@@ -52,7 +52,9 @@ def lista_vinos():
         cursor = None
         try:
             db = get_vinos_db()
-            cursor = db.cursor(dictionary=True, buffered=True)
+            cursor = db.cursor(
+                dictionary=True, buffered=True
+            )  # cursor entrega diccionario
 
             query = """
                 SELECT v.vino_id, v.vino_nombre, t.tipo_nombre, b.bodega_nombre, v.zona_origen 
@@ -62,13 +64,13 @@ def lista_vinos():
                 ORDER BY v.vino_nombre ASC
             """
             cursor.execute(query)
-            vinos = cursor.fetchall()
+            vinos = cursor.fetchall()  # todos los resultados
             return render_template("vinos_lista.html", vinos=vinos)
 
         except mysql.connector.errors.OperationalError as e:
             if intento == max_intentos - 1:
                 raise e
-            print(
+            print(  # log por si se corta
                 f"⚠️ Micro-corte de red detectado (Intento {intento + 1}). Reintentando..."
             )
 
@@ -85,7 +87,7 @@ def lista_vinos():
                 pass
 
 
-# --- 2. CREAR: Añadir un vino nuevo ---
+# añadir vinos
 @vinos_bp.route("/vinos/nuevo", methods=["GET", "POST"])
 @login_required
 def nuevo_vino():
@@ -94,6 +96,7 @@ def nuevo_vino():
 
     try:
         if request.method == "POST":
+            # datos del formulario
             nombre = request.form["vino_nombre"]
             tipo_id = request.form["vino_tipo"] or None
             bodega_id = request.form["bodega"] or None
@@ -102,22 +105,23 @@ def nuevo_vino():
 
             sql = """
                 INSERT INTO vinos (vino_nombre, vino_tipo, bodega, zona_origen, vino_desc) 
-                VALUES (%s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s) 
             """
+            # %s pasar los datos por separado
             cursor.execute(sql, (nombre, tipo_id, bodega_id, zona, desc))
             db.commit()
 
             flash("El vino se ha guardado correctamente en el catálogo.", "success")
             return redirect(url_for("vinos.lista_vinos"))
 
-        # Para el método GET, cargamos las listas del formulario
+        #  si es get mostramos
         cursor.execute("SELECT * FROM tipos")
         tipos = cursor.fetchall()
 
         cursor.execute("SELECT * FROM bodegas")
         bodegas = cursor.fetchall()
 
-        # OBTENEMOS LAS ZONAS ÚNICAS PARA EL AUTCOMPLETADO
+        # obtener zonas ya guardadas pra el autocompletado
         cursor.execute(
             "SELECT DISTINCT zona_origen FROM vinos WHERE zona_origen IS NOT NULL AND zona_origen != '' ORDER BY zona_origen"
         )
@@ -141,7 +145,7 @@ def nuevo_vino():
             pass
 
 
-# --- 3. BORRAR: Eliminar un vino ---
+# borrar un docker
 @vinos_bp.route("/vinos/borrar/<int:id>", methods=["POST"])
 @login_required
 def borrar_vino(id):
